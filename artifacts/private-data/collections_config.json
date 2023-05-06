@@ -1,7 +1,7 @@
 [
      {
           "name": "collectionCapsules",
-          "policy": "OR('Org1MSP.member', 'Org2MSP.member')",  
+          "policy": "OR('HospitalMSP.member', 'CardiologyMSP.member', 'GeneralServicesMSP.member')",  
           "requiredPeerCount": 0,
           "maxPeerCount": 3,
           "blockToLive": 1000000,
@@ -10,14 +10,14 @@
      },
      {
           "name": "collectionCapsulePrivateDetails",
-          "policy": "OR('Org1MSP.member')",
+          "policy": "OR('HospitalMSP.member', 'CardiologyMSP.member')",
           "requiredPeerCount": 0,
           "maxPeerCount": 3,
           "blockToLive": 3,
           "memberOnlyRead": true,
           "memberOnlyWrite": true,
           "endorsementPolicy": {
-               "signaturePolicy": "OR('Org1MSP.member')"
+               "signaturePolicy": "OR('HospitalMSP.member', 'CardiologyMSP.member')"
           }
      }
 ]

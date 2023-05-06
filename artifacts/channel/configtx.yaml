@@ -19,7 +19,7 @@ Organizations:
         ID: OrdererMSP
 
         # MSPDir is the filesystem path which contains the MSP configuration
-        MSPDir: crypto-config/ordererOrganizations/example.com/msp
+        MSPDir: crypto-config/ordererOrganizations/network.com/msp
 
         # Policies defines the set of policies at this level of the config tree
         # For organization policies, their canonical path is usually
@@ -35,15 +35,15 @@ Organizations:
                 Type: Signature
                 Rule: "OR('OrdererMSP.admin')"
 
-    - &Org1
+    - &Hospital
         # DefaultOrg defines the organization which is used in the sampleconfig
         # of the fabric.git development environment
-        Name: Org1MSP
+        Name: HospitalMSP
 
         # ID to load the MSP definition as
-        ID: Org1MSP
+        ID: HospitalMSP
 
-        MSPDir: crypto-config/peerOrganizations/org1.example.com/msp
+        MSPDir: crypto-config/peerOrganizations/hospital.network.com/msp
 
         # Policies defines the set of policies at this level of the config tree
         # For organization policies, their canonical path is usually
@@ -51,34 +51,34 @@ Organizations:
         Policies:
             Readers:
                 Type: Signature
-                Rule: "OR('Org1MSP.admin', 'Org1MSP.peer', 'Org1MSP.client')"
+                Rule: "OR('HospitalMSP.admin', 'HospitalMSP.peer', 'HospitalMSP.client')"
             Writers:
                 Type: Signature
-                Rule: "OR('Org1MSP.admin', 'Org1MSP.client')"
+                Rule: "OR('HospitalMSP.admin', 'HospitalMSP.client')"
             Admins:
                 Type: Signature
-                Rule: "OR('Org1MSP.admin')"
+                Rule: "OR('HospitalMSP.admin')"
             Endorsement:
                 Type: Signature
-                Rule: "OR('Org1MSP.peer')"
+                Rule: "OR('HospitalMSP.peer')"
 
         # leave this flag set to true.
         AnchorPeers:
             # AnchorPeers defines the location of peers which can be used
             # for cross org gossip communication.  Note, this value is only
             # encoded in the genesis block in the Application section context
-            - Host: peer0.org1.example.com
+            - Host: peer0.hospital.network.com
               Port: 7051
 
-    - &Org2
+    - &Cardiology
         # DefaultOrg defines the organization which is used in the sampleconfig
         # of the fabric.git development environment
-        Name: Org2MSP
+        Name: CardiologyMSP
 
         # ID to load the MSP definition as
-        ID: Org2MSP
+        ID: CardiologyMSP
 
-        MSPDir: crypto-config/peerOrganizations/org2.example.com/msp
+        MSPDir: crypto-config/peerOrganizations/cardiology.network.com/msp
 
         # Policies defines the set of policies at this level of the config tree
         # For organization policies, their canonical path is usually
@@ -86,23 +86,58 @@ Organizations:
         Policies:
             Readers:
                 Type: Signature
-                Rule: "OR('Org2MSP.admin', 'Org2MSP.peer', 'Org2MSP.client')"
+                Rule: "OR('CardiologyMSP.admin', 'CardiologyMSP.peer', 'CardiologyMSP.client')"
             Writers:
                 Type: Signature
-                Rule: "OR('Org2MSP.admin', 'Org2MSP.client')"
+                Rule: "OR('CardiologyMSP.admin', 'CardiologyMSP.client')"
             Admins:
                 Type: Signature
-                Rule: "OR('Org2MSP.admin')"
+                Rule: "OR('CardiologyMSP.admin')"
             Endorsement:
                 Type: Signature
-                Rule: "OR('Org2MSP.peer')"
+                Rule: "OR('CardiologyMSP.peer')"
 
         AnchorPeers:
             # AnchorPeers defines the location of peers which can be used
             # for cross org gossip communication.  Note, this value is only
             # encoded in the genesis block in the Application section context
-            - Host: peer0.org2.example.com
+            - Host: peer0.cardiology.network.com
               Port: 9051
+
+    - &GeneralServices
+        # DefaultOrg defines the organization which is used in the sampleconfig
+        # of the fabric.git development environment
+        Name: GeneralServicesMSP
+
+        # ID to load the MSP definition as
+        ID: GeneralServicesMSP
+
+        MSPDir: crypto-config/peerOrganizations/generalservices.network.com/msp
+
+        # Policies defines the set of policies at this level of the config tree
+        # For organization policies, their canonical path is usually
+        #   /Channel/<Application|Orderer>/<OrgName>/<PolicyName>
+        Policies:
+            Readers:
+                Type: Signature
+                Rule: "OR('GeneralServicesMSP.admin', 'GeneralServicesMSP.peer', 'GeneralServicesMSP.client')"
+            Writers:
+                Type: Signature
+                Rule: "OR('GeneralServicesMSP.admin', 'GeneralServicesMSP.client')"
+            Admins:
+                Type: Signature
+                Rule: "OR('GeneralServicesMSP.admin')"
+            Endorsement:
+                Type: Signature
+                Rule: "OR('GeneralServicesMSP.peer')"
+
+        # leave this flag set to true.
+        AnchorPeers:
+            # AnchorPeers defines the location of peers which can be used
+            # for cross org gossip communication.  Note, this value is only
+            # encoded in the genesis block in the Application section context
+            - Host: peer0.generalservices.network.com
+              Port: 11051
 
 ################################################################################
 #
@@ -211,13 +246,13 @@ Orderer: &OrdererDefaults
 
     EtcdRaft:
         Consenters:
-        - Host: orderer.example.com
+        - Host: orderer.network.com
           Port: 7050
-          ClientTLSCert: crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/server.crt
-          ServerTLSCert: crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/server.crt
+          ClientTLSCert: crypto-config/ordererOrganizations/network.com/orderers/orderer.network.com/tls/server.crt
+          ServerTLSCert: crypto-config/ordererOrganizations/network.com/orderers/orderer.network.com/tls/server.crt
 
     Addresses:
-        - orderer.example.com:7050
+        - orderer.network.com:7050
 
     # Batch Timeout: The amount of time to wait before creating a batch
     BatchTimeout: 2s
@@ -308,8 +343,9 @@ Profiles:
         Application:
             <<: *ApplicationDefaults
             Organizations:
-                - *Org1
-                - *Org2
+                - *Hospital
+                - *Cardiology
+                - *GeneralServices
             Capabilities:
                 <<: *ApplicationCapabilities
 
@@ -322,32 +358,32 @@ Profiles:
             OrdererType: etcdraft
             EtcdRaft:
                 Consenters:
-                - Host: orderer.example.com
+                - Host: orderer.network.com
                   Port: 7050
-                  ClientTLSCert: crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/server.crt
-                  ServerTLSCert: crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/server.crt
-                - Host: orderer2.example.com
+                  ClientTLSCert: crypto-config/ordererOrganizations/network.com/orderers/orderer.network.com/tls/server.crt
+                  ServerTLSCert: crypto-config/ordererOrganizations/network.com/orderers/orderer.network.com/tls/server.crt
+                - Host: orderer2.network.com
                   Port: 8050
-                  ClientTLSCert: crypto-config/ordererOrganizations/example.com/orderers/orderer2.example.com/tls/server.crt
-                  ServerTLSCert: crypto-config/ordererOrganizations/example.com/orderers/orderer2.example.com/tls/server.crt
-                - Host: orderer3.example.com
+                  ClientTLSCert: crypto-config/ordererOrganizations/network.com/orderers/orderer2.network.com/tls/server.crt
+                  ServerTLSCert: crypto-config/ordererOrganizations/network.com/orderers/orderer2.network.com/tls/server.crt
+                - Host: orderer3.network.com
                   Port: 9050
-                  ClientTLSCert: crypto-config/ordererOrganizations/example.com/orderers/orderer3.example.com/tls/server.crt
-                  ServerTLSCert: crypto-config/ordererOrganizations/example.com/orderers/orderer3.example.com/tls/server.crt
-                # - Host: orderer4.example.com
+                  ClientTLSCert: crypto-config/ordererOrganizations/network.com/orderers/orderer3.network.com/tls/server.crt
+                  ServerTLSCert: crypto-config/ordererOrganizations/network.com/orderers/orderer3.network.com/tls/server.crt
+                # - Host: orderer4.network.com
                 #   Port: 10050
-                #   ClientTLSCert: crypto-config/ordererOrganizations/example.com/orderers/orderer4.example.com/tls/server.crt
-                #   ServerTLSCert: crypto-config/ordererOrganizations/example.com/orderers/orderer4.example.com/tls/server.crt
-                # - Host: orderer5.example.com
+                #   ClientTLSCert: crypto-config/ordererOrganizations/network.com/orderers/orderer4.network.com/tls/server.crt
+                #   ServerTLSCert: crypto-config/ordererOrganizations/network.com/orderers/orderer4.network.com/tls/server.crt
+                # - Host: orderer5.network.com
                 #   Port: 11050
-                #   ClientTLSCert: crypto-config/ordererOrganizations/example.com/orderers/orderer5.example.com/tls/server.crt
-                #   ServerTLSCert: crypto-config/ordererOrganizations/example.com/orderers/orderer5.example.com/tls/server.crt
+                #   ClientTLSCert: crypto-config/ordererOrganizations/network.com/orderers/orderer5.network.com/tls/server.crt
+                #   ServerTLSCert: crypto-config/ordererOrganizations/network.com/orderers/orderer5.network.com/tls/server.crt
             Addresses:
-                - orderer.example.com:7050
-                - orderer2.example.com:8050
-                - orderer3.example.com:9050
-                # - orderer4.example.com:10050
-                # - orderer5.example.com:11050
+                - orderer.network.com:7050
+                - orderer2.network.com:8050
+                - orderer3.network.com:9050
+                # - orderer4.network.com:10050
+                # - orderer5.network.com:11050
 
             Organizations:
             - *OrdererOrg
@@ -356,5 +392,6 @@ Profiles:
         Consortiums:
             SampleConsortium:
                 Organizations:
-                - *Org1
-                - *Org2
+                - *Hospital
+                - *Cardiology
+                - *GeneralServices
