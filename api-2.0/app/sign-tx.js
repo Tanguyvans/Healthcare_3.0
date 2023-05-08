@@ -5,7 +5,7 @@
 // Step : 1 generate an unsigned transaction proposal with the identity's certificate
 
 const certPem = '<PEM encoded certificate content>';
-const mspId = 'Org1MSP'; // the msp Id for this org
+const mspId = 'HospitalMSP'; // the msp Id for this org
 
 const transactionProposal = {
     fcn: 'move',

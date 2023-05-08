@@ -38,7 +38,6 @@ app.use(bearerToken());
 
 logger.level = 'debug';
 
-
 app.use((req, res, next) => {
     logger.debug('New req for %s', req.originalUrl);
     if (req.originalUrl.indexOf('/users') >= 0 || req.originalUrl.indexOf('/users/login') >= 0 || req.originalUrl.indexOf('/register') >= 0) {
@@ -100,7 +99,8 @@ app.post('/users', async function (req, res) {
     }, app.get('secret'));
 
     let response = await helper.getRegisteredUser(username, orgName, true);
-
+    console.log('test');
+    console.log(response);
     logger.debug('-- returned from registering the username %s for organization %s', username, orgName);
     if (response && typeof response !== 'string') {
         logger.debug('Successfully registered the username %s for organization %s', username, orgName);
@@ -183,7 +183,6 @@ app.post('/users/login', async function (req, res) {
         res.json({ success: false, message: `User with username ${username} is not registered with ${orgName}, Please register first.` });
     }
 });
-
 
 // Invoke transaction on chaincode on target peers
 app.post('/channels/:channelName/chaincodes/:chaincodeName', async function (req, res) {
@@ -331,12 +330,6 @@ app.get('/qscc/channels/:channelName/chaincodes/:chaincodeName', async function 
         logger.debug(args);
 
         let response_payload = await qscc.qscc(channelName, chaincodeName, args, fcn, req.username, req.orgname);
-
-        // const response_payload = {
-        //     result: message,
-        //     error: null,
-        //     errorData: null
-        // }
 
         res.send(response_payload);
     } catch (error) {

@@ -1,0 +1,1 @@
+bin/fabric-ca-client identity list --id admin --mspdir ${PWD}/artifacts/channel/crypto-config/peerOrganizations/hospital.network.com/msp

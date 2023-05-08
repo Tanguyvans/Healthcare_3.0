@@ -8,15 +8,8 @@ const util = require('util')
 
 const helper = require('./helper')
 const query = async (channelName, chaincodeName, args, fcn, username, org_name) => {
-
     try {
-
-        // load the network configuration
-        // const ccpPath = path.resolve(__dirname, '..', 'config', 'connection-org1.json');
-        // const ccpJSON = fs.readFileSync(ccpPath, 'utf8')
         const ccp = await helper.getCCP(org_name) //JSON.parse(ccpJSON);
-
-        // Create a new file system based wallet for managing identities.
         const walletPath = await helper.getWalletPath(org_name) //.join(process.cwd(), 'wallet');
         const wallet = await Wallets.newFileSystemWallet(walletPath);
         console.log(`Wallet path: ${walletPath}`);
@@ -44,8 +37,10 @@ const query = async (channelName, chaincodeName, args, fcn, username, org_name) 
         const contract = network.getContract(chaincodeName);
         let result;
 
-        if (fcn == "queryCar" || fcn =="queryCarsByOwner" || fcn == 'getHistoryForAsset' || fcn=='restictedMethod') {
+        if (fcn == "readAsset") {
             result = await contract.evaluateTransaction(fcn, args[0]);
+            console.log('in')
+            console.log(result);
 
         } else if (fcn == "readPrivateCar" || fcn == "queryPrivateDataHash"
         || fcn == "collectionCarPrivateDetails") {

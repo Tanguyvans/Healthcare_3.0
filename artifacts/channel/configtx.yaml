@@ -370,20 +370,10 @@ Profiles:
                   Port: 9050
                   ClientTLSCert: crypto-config/ordererOrganizations/network.com/orderers/orderer3.network.com/tls/server.crt
                   ServerTLSCert: crypto-config/ordererOrganizations/network.com/orderers/orderer3.network.com/tls/server.crt
-                # - Host: orderer4.network.com
-                #   Port: 10050
-                #   ClientTLSCert: crypto-config/ordererOrganizations/network.com/orderers/orderer4.network.com/tls/server.crt
-                #   ServerTLSCert: crypto-config/ordererOrganizations/network.com/orderers/orderer4.network.com/tls/server.crt
-                # - Host: orderer5.network.com
-                #   Port: 11050
-                #   ClientTLSCert: crypto-config/ordererOrganizations/network.com/orderers/orderer5.network.com/tls/server.crt
-                #   ServerTLSCert: crypto-config/ordererOrganizations/network.com/orderers/orderer5.network.com/tls/server.crt
             Addresses:
                 - orderer.network.com:7050
                 - orderer2.network.com:8050
                 - orderer3.network.com:9050
-                # - orderer4.network.com:10050
-                # - orderer5.network.com:11050
 
             Organizations:
             - *OrdererOrg

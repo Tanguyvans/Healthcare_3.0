@@ -1,0 +1,62 @@
+{
+    "name": "first-network-generalservices",
+    "version": "1.0.0",
+    "client": {
+        "organization": "GeneralServices",
+        "connection": {
+            "timeout": {
+                "peer": {
+                    "endorser": "300"
+                }
+            }
+        }
+    },
+    "organizations": {
+        "GeneralServices": {
+            "mspid": "GeneralServicesMSP",
+            "peers": [
+                "peer0.generalservices.network.com",
+                "peer1.generalservices.network.com"
+            ],
+            "certificateAuthorities": [
+                "ca.generalservices.network.com"
+            ]
+        }
+    },
+    "peers": {
+        "peer0.generalservices.network.com": {
+            "url": "grpcs://localhost:11051",
+            "tlsCACerts": {
+                "pem": "-----BEGIN CERTIFICATE-----\nMIICFzCCAb2gAwIBAgIUfKZ9YTssNsJClwK/ooKrZK/vjI8wCgYIKoZIzj0EAwIw\naDELMAkGA1UEBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMRQwEgYDVQQK\nEwtIeXBlcmxlZGdlcjEPMA0GA1UECxMGRmFicmljMRkwFwYDVQQDExBmYWJyaWMt\nY2Etc2VydmVyMB4XDTIzMDUwNTE5MDUwMFoXDTM4MDUwMTE5MDUwMFowaDELMAkG\nA1UEBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMRQwEgYDVQQKEwtIeXBl\ncmxlZGdlcjEPMA0GA1UECxMGRmFicmljMRkwFwYDVQQDExBmYWJyaWMtY2Etc2Vy\ndmVyMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAECkcrPRJiNzchOcOwCuPoUnNa\npMdqF6m/MlbDNfuzQgk5Pjd9GNv8bo2hdPe3jdF/6yvdTwyX7nWUl7WVq3hT+aNF\nMEMwDgYDVR0PAQH/BAQDAgEGMBIGA1UdEwEB/wQIMAYBAf8CAQEwHQYDVR0OBBYE\nFNDx9G1EPdmouuj/HwEQubTYYWpKMAoGCCqGSM49BAMCA0gAMEUCIQCermUlo8Dd\nA+/CvlknChw4ZAov/PKE5oEUc+hvpz+WGwIgQv8qaVK1xCBV2kXGO65qU54YPFRu\nwvF5FpZyFan4pE0=\n-----END CERTIFICATE-----\n"
+            },
+            "grpcOptions": {
+                "ssl-target-name-override": "peer0.generalservices.network.com",
+                "hostnameOverride": "peer0.generalservices.network.com"
+            }
+        },
+	"peer1.generalservices.network.com": {
+            "url": "grpcs://localhost:12051",
+            "tlsCACerts": {
+                "pem": "-----BEGIN CERTIFICATE-----\nMIICFzCCAb2gAwIBAgIUfKZ9YTssNsJClwK/ooKrZK/vjI8wCgYIKoZIzj0EAwIw\naDELMAkGA1UEBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMRQwEgYDVQQK\nEwtIeXBlcmxlZGdlcjEPMA0GA1UECxMGRmFicmljMRkwFwYDVQQDExBmYWJyaWMt\nY2Etc2VydmVyMB4XDTIzMDUwNTE5MDUwMFoXDTM4MDUwMTE5MDUwMFowaDELMAkG\nA1UEBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMRQwEgYDVQQKEwtIeXBl\ncmxlZGdlcjEPMA0GA1UECxMGRmFicmljMRkwFwYDVQQDExBmYWJyaWMtY2Etc2Vy\ndmVyMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAECkcrPRJiNzchOcOwCuPoUnNa\npMdqF6m/MlbDNfuzQgk5Pjd9GNv8bo2hdPe3jdF/6yvdTwyX7nWUl7WVq3hT+aNF\nMEMwDgYDVR0PAQH/BAQDAgEGMBIGA1UdEwEB/wQIMAYBAf8CAQEwHQYDVR0OBBYE\nFNDx9G1EPdmouuj/HwEQubTYYWpKMAoGCCqGSM49BAMCA0gAMEUCIQCermUlo8Dd\nA+/CvlknChw4ZAov/PKE5oEUc+hvpz+WGwIgQv8qaVK1xCBV2kXGO65qU54YPFRu\nwvF5FpZyFan4pE0=\n-----END CERTIFICATE-----\n"
+            },
+            "grpcOptions": {
+                "ssl-target-name-override": "peer1.generalservices.network.com",
+                "hostnameOverride": "peer1.generalservices.network.com"
+            }
+        }
+
+	
+    },
+    "certificateAuthorities": {
+        "ca.generalservices.network.com": {
+            "url": "https://localhost:9054",
+            "caName": "ca.generalservices.network.com",
+            "tlsCACerts": {
+                "pem": "-----BEGIN CERTIFICATE-----\nMIICFzCCAb2gAwIBAgIUfKZ9YTssNsJClwK/ooKrZK/vjI8wCgYIKoZIzj0EAwIw\naDELMAkGA1UEBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMRQwEgYDVQQK\nEwtIeXBlcmxlZGdlcjEPMA0GA1UECxMGRmFicmljMRkwFwYDVQQDExBmYWJyaWMt\nY2Etc2VydmVyMB4XDTIzMDUwNTE5MDUwMFoXDTM4MDUwMTE5MDUwMFowaDELMAkG\nA1UEBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMRQwEgYDVQQKEwtIeXBl\ncmxlZGdlcjEPMA0GA1UECxMGRmFicmljMRkwFwYDVQQDExBmYWJyaWMtY2Etc2Vy\ndmVyMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAECkcrPRJiNzchOcOwCuPoUnNa\npMdqF6m/MlbDNfuzQgk5Pjd9GNv8bo2hdPe3jdF/6yvdTwyX7nWUl7WVq3hT+aNF\nMEMwDgYDVR0PAQH/BAQDAgEGMBIGA1UdEwEB/wQIMAYBAf8CAQEwHQYDVR0OBBYE\nFNDx9G1EPdmouuj/HwEQubTYYWpKMAoGCCqGSM49BAMCA0gAMEUCIQCermUlo8Dd\nA+/CvlknChw4ZAov/PKE5oEUc+hvpz+WGwIgQv8qaVK1xCBV2kXGO65qU54YPFRu\nwvF5FpZyFan4pE0=\n-----END CERTIFICATE-----\n"
+            },
+            "httpOptions": {
+                "verify": false
+            }
+        }
+    }
+}

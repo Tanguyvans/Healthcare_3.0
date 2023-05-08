@@ -1,0 +1,60 @@
+{
+    "name": "first-network-hospital",
+    "version": "1.0.0",
+    "client": {
+        "organization": "hospital",
+        "connection": {
+            "timeout": {
+                "peer": {
+                    "endorser": "300"
+                }
+            }
+        }
+    },
+    "organizations": {
+        "Hospital": {
+            "mspid": "HospitalMSP",
+            "peers": [
+                "peer0.hospital.network.com",
+                "peer1.hospital.network.com"
+            ],
+            "certificateAuthorities": [
+                "ca.hospital.network.com"
+            ]
+        }
+    },
+    "peers": {
+        "peer0.hospital.network.com": {
+            "url": "grpcs://localhost:7051",
+            "tlsCACerts": {
+                "pem": "-----BEGIN CERTIFICATE-----\nMIICFzCCAb2gAwIBAgIUc3lnRu7ltESFSU1l8ZjVv3ueM7EwCgYIKoZIzj0EAwIw\naDELMAkGA1UEBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMRQwEgYDVQQK\nEwtIeXBlcmxlZGdlcjEPMA0GA1UECxMGRmFicmljMRkwFwYDVQQDExBmYWJyaWMt\nY2Etc2VydmVyMB4XDTIzMDUwNTE5MDUwMFoXDTM4MDUwMTE5MDUwMFowaDELMAkG\nA1UEBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMRQwEgYDVQQKEwtIeXBl\ncmxlZGdlcjEPMA0GA1UECxMGRmFicmljMRkwFwYDVQQDExBmYWJyaWMtY2Etc2Vy\ndmVyMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEgG0AGoCXdsiX8hsF1YHpXZxx\n2tOCv8RwHf4j0kg0Lafx64CkOAd3jCdClUjWYZdGQL7+a9uUTFpEzurbko3aEaNF\nMEMwDgYDVR0PAQH/BAQDAgEGMBIGA1UdEwEB/wQIMAYBAf8CAQEwHQYDVR0OBBYE\nFGiisgjH/fqyc2UBG9bss8jCFGQaMAoGCCqGSM49BAMCA0gAMEUCIQD+aP/umme9\nqLsdbh9KN6jj5o+lWuUw+IDg7PQhM1JXsQIgR8qyouVOcc2El2eupcLjG7y1SVzX\nOCrbqNNi8N3D6QA=\n-----END CERTIFICATE-----\n"
+            },
+            "grpcOptions": {
+                "ssl-target-name-override": "peer0.hospital.network.com",
+                "hostnameOverride": "peer0.hospital.network.com"
+            }
+        },
+	    "peer1.hospital.network.com": {
+            "url": "grpcs://localhost:8051",
+            "tlsCACerts": {
+                "pem": "-----BEGIN CERTIFICATE-----\nMIICFzCCAb2gAwIBAgIUc3lnRu7ltESFSU1l8ZjVv3ueM7EwCgYIKoZIzj0EAwIw\naDELMAkGA1UEBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMRQwEgYDVQQK\nEwtIeXBlcmxlZGdlcjEPMA0GA1UECxMGRmFicmljMRkwFwYDVQQDExBmYWJyaWMt\nY2Etc2VydmVyMB4XDTIzMDUwNTE5MDUwMFoXDTM4MDUwMTE5MDUwMFowaDELMAkG\nA1UEBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMRQwEgYDVQQKEwtIeXBl\ncmxlZGdlcjEPMA0GA1UECxMGRmFicmljMRkwFwYDVQQDExBmYWJyaWMtY2Etc2Vy\ndmVyMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEgG0AGoCXdsiX8hsF1YHpXZxx\n2tOCv8RwHf4j0kg0Lafx64CkOAd3jCdClUjWYZdGQL7+a9uUTFpEzurbko3aEaNF\nMEMwDgYDVR0PAQH/BAQDAgEGMBIGA1UdEwEB/wQIMAYBAf8CAQEwHQYDVR0OBBYE\nFGiisgjH/fqyc2UBG9bss8jCFGQaMAoGCCqGSM49BAMCA0gAMEUCIQD+aP/umme9\nqLsdbh9KN6jj5o+lWuUw+IDg7PQhM1JXsQIgR8qyouVOcc2El2eupcLjG7y1SVzX\nOCrbqNNi8N3D6QA=\n-----END CERTIFICATE-----\n"
+            },
+            "grpcOptions": {
+                "ssl-target-name-override": "peer1.hospital.network.com",
+                "hostnameOverride": "peer1.hospital.network.com"
+            }
+        }	
+    },
+    "certificateAuthorities": {
+        "ca.hospital.network.com": {
+            "url": "https://localhost:7054",
+            "caName": "ca.hospital.network.com",
+            "tlsCACerts": {
+                "pem": "-----BEGIN CERTIFICATE-----\nMIICFzCCAb2gAwIBAgIUc3lnRu7ltESFSU1l8ZjVv3ueM7EwCgYIKoZIzj0EAwIw\naDELMAkGA1UEBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMRQwEgYDVQQK\nEwtIeXBlcmxlZGdlcjEPMA0GA1UECxMGRmFicmljMRkwFwYDVQQDExBmYWJyaWMt\nY2Etc2VydmVyMB4XDTIzMDUwNTE5MDUwMFoXDTM4MDUwMTE5MDUwMFowaDELMAkG\nA1UEBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMRQwEgYDVQQKEwtIeXBl\ncmxlZGdlcjEPMA0GA1UECxMGRmFicmljMRkwFwYDVQQDExBmYWJyaWMtY2Etc2Vy\ndmVyMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEgG0AGoCXdsiX8hsF1YHpXZxx\n2tOCv8RwHf4j0kg0Lafx64CkOAd3jCdClUjWYZdGQL7+a9uUTFpEzurbko3aEaNF\nMEMwDgYDVR0PAQH/BAQDAgEGMBIGA1UdEwEB/wQIMAYBAf8CAQEwHQYDVR0OBBYE\nFGiisgjH/fqyc2UBG9bss8jCFGQaMAoGCCqGSM49BAMCA0gAMEUCIQD+aP/umme9\nqLsdbh9KN6jj5o+lWuUw+IDg7PQhM1JXsQIgR8qyouVOcc2El2eupcLjG7y1SVzX\nOCrbqNNi8N3D6QA=\n-----END CERTIFICATE-----\n"
+            },
+            "httpOptions": {
+                "verify": false
+            }
+        }
+    }
+}

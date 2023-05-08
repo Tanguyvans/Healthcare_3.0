@@ -96,13 +96,20 @@ class Capsule extends Contract {
         throw new Error('No transient data found');
     }
 
+    async getAssetsByPatient(ctx, patient) {
+        const assetsByPatient = assets.filter(asset => asset.Patient === patient);
+      
+        return assetsByPatient;
+    }
+
     // ReadAsset returns the asset stored in the world state with given id.
     async ReadAsset(ctx, id) {
-        const assetJSON = await ctx.stub.getState(id); // get the asset from chaincode state
-        if (!assetJSON || assetJSON.length === 0) {
+        const assetBuffer = await ctx.stub.getState(id); // get the asset from chaincode state
+        if (!assetBuffer || assetBuffer.length === 0) {
             throw new Error(`The asset ${id} does not exist`);
         }
-        return assetJSON.toString();
+        const assetJSON = assetBuffer.toString('utf8');
+        return JSON.parse(assetJSON);
     }
 
     // UpdateAsset updates an existing asset in the world state with provided parameters.

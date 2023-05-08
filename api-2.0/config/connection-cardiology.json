@@ -1,0 +1,62 @@
+{
+    "name": "first-network-cardiology",
+    "version": "1.0.0",
+    "client": {
+        "organization": "Cardiology",
+        "connection": {
+            "timeout": {
+                "peer": {
+                    "endorser": "300"
+                }
+            }
+        }
+    },
+    "organizations": {
+        "Cardiology": {
+            "mspid": "CardiologyMSP",
+            "peers": [
+                "peer0.cardiology.network.com",
+                "peer1.cardiology.network.com"
+            ],
+            "certificateAuthorities": [
+                "ca.cardiology.network.com"
+            ]
+        }
+    },
+    "peers": {
+        "peer0.cardiology.network.com": {
+            "url": "grpcs://localhost:9051",
+            "tlsCACerts": {
+                "pem": "-----BEGIN CERTIFICATE-----\nMIICFzCCAb2gAwIBAgIUVbgUmwGRdCIkXiBioI0BEr3iBoYwCgYIKoZIzj0EAwIw\naDELMAkGA1UEBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMRQwEgYDVQQK\nEwtIeXBlcmxlZGdlcjEPMA0GA1UECxMGRmFicmljMRkwFwYDVQQDExBmYWJyaWMt\nY2Etc2VydmVyMB4XDTIzMDUwNTE5MDUwMFoXDTM4MDUwMTE5MDUwMFowaDELMAkG\nA1UEBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMRQwEgYDVQQKEwtIeXBl\ncmxlZGdlcjEPMA0GA1UECxMGRmFicmljMRkwFwYDVQQDExBmYWJyaWMtY2Etc2Vy\ndmVyMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEEO5zKcBbc2M3YGxmtTK0kCOn\npbV0XZ+iXN+xTz8z53vZgb7Ht/2Nl7ILYaX+20IvQ8DLtdyhkw062QU1fsV7NaNF\nMEMwDgYDVR0PAQH/BAQDAgEGMBIGA1UdEwEB/wQIMAYBAf8CAQEwHQYDVR0OBBYE\nFKCQQkHQ9oCjxkDFVkTkVdKDFVnoMAoGCCqGSM49BAMCA0gAMEUCIQCHvAfWEI30\nqaR1epN63Qs+v8rsFt8QyO4lbHajH0jVhAIgUQVNn8YN53PdvyJMqzda1ua023wJ\nY03P5qX8p8uHSIw=\n-----END CERTIFICATE-----\n"
+            },
+            "grpcOptions": {
+                "ssl-target-name-override": "peer0.cardiology.network.com",
+                "hostnameOverride": "peer0.cardiology.network.com"
+            }
+        },
+	"peer1.cardiology.network.com": {
+            "url": "grpcs://localhost:10051",
+            "tlsCACerts": {
+                "pem": "-----BEGIN CERTIFICATE-----\nMIICFzCCAb2gAwIBAgIUVbgUmwGRdCIkXiBioI0BEr3iBoYwCgYIKoZIzj0EAwIw\naDELMAkGA1UEBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMRQwEgYDVQQK\nEwtIeXBlcmxlZGdlcjEPMA0GA1UECxMGRmFicmljMRkwFwYDVQQDExBmYWJyaWMt\nY2Etc2VydmVyMB4XDTIzMDUwNTE5MDUwMFoXDTM4MDUwMTE5MDUwMFowaDELMAkG\nA1UEBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMRQwEgYDVQQKEwtIeXBl\ncmxlZGdlcjEPMA0GA1UECxMGRmFicmljMRkwFwYDVQQDExBmYWJyaWMtY2Etc2Vy\ndmVyMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEEO5zKcBbc2M3YGxmtTK0kCOn\npbV0XZ+iXN+xTz8z53vZgb7Ht/2Nl7ILYaX+20IvQ8DLtdyhkw062QU1fsV7NaNF\nMEMwDgYDVR0PAQH/BAQDAgEGMBIGA1UdEwEB/wQIMAYBAf8CAQEwHQYDVR0OBBYE\nFKCQQkHQ9oCjxkDFVkTkVdKDFVnoMAoGCCqGSM49BAMCA0gAMEUCIQCHvAfWEI30\nqaR1epN63Qs+v8rsFt8QyO4lbHajH0jVhAIgUQVNn8YN53PdvyJMqzda1ua023wJ\nY03P5qX8p8uHSIw=\n-----END CERTIFICATE-----\n"
+            },
+            "grpcOptions": {
+                "ssl-target-name-override": "peer1.cardiology.network.com",
+                "hostnameOverride": "peer1.cardiology.network.com"
+            }
+        }
+
+	
+    },
+    "certificateAuthorities": {
+        "ca.cardiology.network.com": {
+            "url": "https://localhost:8054",
+            "caName": "ca.cardiology.network.com",
+            "tlsCACerts": {
+                "pem": "-----BEGIN CERTIFICATE-----\nMIICFzCCAb2gAwIBAgIUVbgUmwGRdCIkXiBioI0BEr3iBoYwCgYIKoZIzj0EAwIw\naDELMAkGA1UEBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMRQwEgYDVQQK\nEwtIeXBlcmxlZGdlcjEPMA0GA1UECxMGRmFicmljMRkwFwYDVQQDExBmYWJyaWMt\nY2Etc2VydmVyMB4XDTIzMDUwNTE5MDUwMFoXDTM4MDUwMTE5MDUwMFowaDELMAkG\nA1UEBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMRQwEgYDVQQKEwtIeXBl\ncmxlZGdlcjEPMA0GA1UECxMGRmFicmljMRkwFwYDVQQDExBmYWJyaWMtY2Etc2Vy\ndmVyMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEEO5zKcBbc2M3YGxmtTK0kCOn\npbV0XZ+iXN+xTz8z53vZgb7Ht/2Nl7ILYaX+20IvQ8DLtdyhkw062QU1fsV7NaNF\nMEMwDgYDVR0PAQH/BAQDAgEGMBIGA1UdEwEB/wQIMAYBAf8CAQEwHQYDVR0OBBYE\nFKCQQkHQ9oCjxkDFVkTkVdKDFVnoMAoGCCqGSM49BAMCA0gAMEUCIQCHvAfWEI30\nqaR1epN63Qs+v8rsFt8QyO4lbHajH0jVhAIgUQVNn8YN53PdvyJMqzda1ua023wJ\nY03P5qX8p8uHSIw=\n-----END CERTIFICATE-----\n"
+            },
+            "httpOptions": {
+                "verify": false
+            }
+        }
+    }
+}
