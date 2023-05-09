@@ -36,10 +36,9 @@ const query = async (channelName, chaincodeName, args, fcn, username, org_name) 
         // Get the contract from the network.
         const contract = network.getContract(chaincodeName);
         let result;
-
-        if (fcn == "readAsset") {
+        if (fcn == "ReadAssetByID" || fcn == "ReadAssetByPatient") {
             result = await contract.evaluateTransaction(fcn, args[0]);
-            console.log('in')
+            
             console.log(result);
 
         } else if (fcn == "readPrivateCar" || fcn == "queryPrivateDataHash"
