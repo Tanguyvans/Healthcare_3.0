@@ -15,7 +15,6 @@ const constants = require('./config/constants.json')
 const host = process.env.HOST || constants.host;
 const port = process.env.PORT || constants.port;
 
-
 const helper = require('./app/helper')
 const invoke = require('./app/invoke')
 const qscc = require('./app/qscc')
@@ -32,7 +31,7 @@ app.set('secret', 'thisismysecret');
 app.use(expressJWT({
     secret: 'thisismysecret'
 }).unless({
-    path: ['/users','/users/login', '/register']
+    path: ['/','/users','/users/login', '/register']
 }));
 app.use(bearerToken());
 
@@ -40,7 +39,7 @@ logger.level = 'debug';
 
 app.use((req, res, next) => {
     logger.debug('New req for %s', req.originalUrl);
-    if (req.originalUrl.indexOf('/users') >= 0 || req.originalUrl.indexOf('/users/login') >= 0 || req.originalUrl.indexOf('/register') >= 0) {
+    if ( req.originalUrl === '/' || req.originalUrl.indexOf('/users') >= 0 || req.originalUrl.indexOf('/users/login') >= 0 || req.originalUrl.indexOf('/register') >= 0) {
         return next();
     }
     var token = req.token;
@@ -75,6 +74,10 @@ function getErrorMessage(field) {
     };
     return response;
 }
+
+app.get('/', function(req, res) {
+    res.sendFile(__dirname + '/app/views/login.html');
+  });
 
 // Register and enroll user
 app.post('/users', async function (req, res) {

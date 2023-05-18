@@ -365,7 +365,7 @@ queryCommittedGeneralServices() {
     fi
 }
 
-chaincodeInvoke() {
+chaincodeInvokeSensor() {
     setGlobalsForPeer0Hospital
 
     bin/peer chaincode invoke -o localhost:7050 \
@@ -378,7 +378,54 @@ chaincodeInvoke() {
         --peerAddresses localhost:11051 --tlsRootCertFiles $PEER0_GENERALSERVICES_CA \
         -c '{"function": "InitLedger","Args":[]}'
 
-    export CAPSULE=$(echo -n "{\"key\":\"pcaps\", \"make\":\"Tesla\",\"model\":\"Tesla A1\",\"color\":\"White\",\"owner\":\"pavan\",\"price\":\"10000\"}" | base64 | tr -d \\n)
+    bin/peer chaincode invoke -o localhost:7050 \
+        --ordererTLSHostnameOverride orderer.network.com \
+        --tls $CORE_PEER_TLS_ENABLED \
+        --cafile $ORDERER_CA \
+        -C $CHANNEL_NAME -n ${CC_NAME} \
+        --peerAddresses localhost:7051 --tlsRootCertFiles $PEER0_HOSPITAL_CA \
+        --peerAddresses localhost:9051 --tlsRootCertFiles $PEER0_CARDIOLOGY_CA\
+        --peerAddresses localhost:11051 --tlsRootCertFiles $PEER0_GENERALSERVICES_CA \
+        -c '{"function": "CreateSensor","Args":["sensor2", "cardiac", "Tanguy"]}'
+
+    # bin/peer chaincode invoke -o localhost:7050 \
+    #     --ordererTLSHostnameOverride orderer.network.com \
+    #     --tls $CORE_PEER_TLS_ENABLED \
+    #     --cafile $ORDERER_CA \
+    #     -C $CHANNEL_NAME -n ${CC_NAME} \
+    #     --peerAddresses localhost:7051 --tlsRootCertFiles $PEER0_HOSPITAL_CA \
+    #     --peerAddresses localhost:9051 --tlsRootCertFiles $PEER0_CARDIOLOGY_CA\
+    #     --peerAddresses localhost:11051 --tlsRootCertFiles $PEER0_GENERALSERVICES_CA \
+    #     -c '{"function": "UpdateSensorPatientName","Args":["sensor1", "Tonny"]}'
+
+    # bin/peer chaincode invoke -o localhost:7050 \
+    #     --ordererTLSHostnameOverride orderer.network.com \
+    #     --tls $CORE_PEER_TLS_ENABLED \
+    #     --cafile $ORDERER_CA \
+    #     -C $CHANNEL_NAME -n ${CC_NAME} \
+    #     --peerAddresses localhost:7051 --tlsRootCertFiles $PEER0_HOSPITAL_CA \
+    #     --peerAddresses localhost:9051 --tlsRootCertFiles $PEER0_CARDIOLOGY_CA\
+    #     --peerAddresses localhost:11051 --tlsRootCertFiles $PEER0_GENERALSERVICES_CA \
+    #     -c '{"function": "QuerySensorById","Args":["sensor1"]}'
+
+    result=$(bin/peer chaincode invoke -o localhost:7050 \
+        --ordererTLSHostnameOverride orderer.network.com \
+        --tls $CORE_PEER_TLS_ENABLED \
+        --cafile $ORDERER_CA \
+        -C $CHANNEL_NAME -n ${CC_NAME} \
+        --peerAddresses localhost:7051 --tlsRootCertFiles $PEER0_HOSPITAL_CA \
+        --peerAddresses localhost:9051 --tlsRootCertFiles $PEER0_CARDIOLOGY_CA \
+        --peerAddresses localhost:11051 --tlsRootCertFiles $PEER0_GENERALSERVICES_CA \
+        -c '{"function": "QuerySensorsByType","Args":["heart"]}' | jq -r '.payload.data')
+
+    echo $result
+
+}
+
+chaincodeInvokeCapsule() {
+    setGlobalsForPeer0Hospital
+    echo "chaincode invoke capsule"
+
     bin/peer chaincode invoke -o localhost:7050 \
         --ordererTLSHostnameOverride orderer.network.com \
         --tls $CORE_PEER_TLS_ENABLED \
@@ -387,11 +434,36 @@ chaincodeInvoke() {
         --peerAddresses localhost:7051 --tlsRootCertFiles $PEER0_HOSPITAL_CA \
         --peerAddresses localhost:9051 --tlsRootCertFiles $PEER0_CARDIOLOGY_CA \
         --peerAddresses localhost:11051 --tlsRootCertFiles $PEER0_GENERALSERVICES_CA \
-        -c '{"function": "CreatePrivateAsset","Args":[]}' \
-        --transient "{\"capsule\":\"$CAPSULE\"}"
+        -c '{"function": "createCapsule","Args":["asset1","sensor1", "heart","2023-05-18T10:00:00Z", "Tanguy","10","20"]}'
+
+    result=$(bin/peer chaincode invoke -o localhost:7050 \
+        --ordererTLSHostnameOverride orderer.network.com \
+        --tls $CORE_PEER_TLS_ENABLED \
+        --cafile $ORDERER_CA \
+        -C $CHANNEL_NAME -n ${CC_NAME} \
+        --peerAddresses localhost:7051 --tlsRootCertFiles $PEER0_HOSPITAL_CA \
+        --peerAddresses localhost:9051 --tlsRootCertFiles $PEER0_CARDIOLOGY_CA \
+        --peerAddresses localhost:11051 --tlsRootCertFiles $PEER0_GENERALSERVICES_CA \
+        -c '{"function": "queryCapsule","Args":["asset1"]}' | jq -r '.payload.data')
+
+    echo $result
+
+    # Query private asset
+    result=$(bin/peer chaincode query -C $CHANNEL_NAME -n $CC_NAME -c '{"Args":["queryPrivateCapsule","asset1"]}')
+    echo $result
+
+    # export CAPSULE=$(echo -n "{\"key\":\"pcaps\", \"make\":\"Tesla\",\"model\":\"Tesla A1\",\"color\":\"White\",\"owner\":\"pavan\",\"price\":\"10000\"}" | base64 | tr -d \\n)
+    # bin/peer chaincode invoke -o localhost:7050 \
+    #     --ordererTLSHostnameOverride orderer.network.com \
+    #     --tls $CORE_PEER_TLS_ENABLED \
+    #     --cafile $ORDERER_CA \
+    #     -C $CHANNEL_NAME -n ${CC_NAME} \
+    #     --peerAddresses localhost:7051 --tlsRootCertFiles $PEER0_HOSPITAL_CA \
+    #     --peerAddresses localhost:9051 --tlsRootCertFiles $PEER0_CARDIOLOGY_CA \
+    #     --peerAddresses localhost:11051 --tlsRootCertFiles $PEER0_GENERALSERVICES_CA \
+    #     -c '{"function": "CreatePrivateAsset","Args":[]}' \
+    #     --transient "{\"capsule\":\"$CAPSULE\"}"
 }
-
-
 
 CHANNEL_NAME="mychannel"
 CC_RUNTIME_LANGUAGE="node"
@@ -405,24 +477,16 @@ INIT_REQUIRED=""
 DELAY=${10:-"3"}
 MAX_RETRY=${11:-"5"}
 
-packageChaincode
-installChaincode
-queryInstalled
-approveForMyHospital
-# checkCommitReadinessHospital "\"HospitalMSP\": true" "\"CardiologyMSP\": false" "\"GeneralSerivcesMSP\": false"
-# checkCommitReadinessCardiology "\"HospitalMSP\": true" "\"CardiologyMSP\": false" "\"GeneralSerivcesMSP\": false"
-# checkCommitReadinessGeneralServices "\"HospitalMSP\": true" "\"CardiologyMSP\": false" "\"GeneralSerivcesMSP\": false"
-approveForMyCardiology
-# checkCommitReadinessHospital "\"HospitalMSP\": true" "\"CardiologyMSP\": true" "\"GeneralSerivcesMSP\": false"
-# checkCommitReadinessCardiology "\"HospitalMSP\": true" "\"CardiologyMSP\": true" "\"GeneralSerivcesMSP\": false"
-# checkCommitReadinessGeneralServices "\"HospitalMSP\": true" "\"CardiologyMSP\": true" "\"GeneralSerivcesMSP\": false"
-approveForMyGeneralServices
-# checkCommitReadinessHospital "\"HospitalMSP\": true" "\"CardiologyMSP\": true" "\"GeneralSerivcesMSP\": true"
-# checkCommitReadinessCardiology "\"HospitalMSP\": true" "\"CardiologyMSP\": true" "\"GeneralSerivcesMSP\": true"
-# checkCommitReadinessGeneralServices "\"HospitalMSP\": true" "\"CardiologyMSP\": true" "\"GeneralSerivcesMSP\": true"
-commitChaincodeDefinition
-queryCommittedHospital
-queryCommittedCardiology
-queryCommittedGeneralServices
-sleep 5
-chaincodeInvoke
+# packageChaincode
+# installChaincode
+# queryInstalled
+# approveForMyHospital
+# approveForMyCardiology
+# approveForMyGeneralServices
+# commitChaincodeDefinition
+# queryCommittedHospital
+# queryCommittedCardiology
+# queryCommittedGeneralServices
+# sleep 5
+# chaincodeInvokeSensor
+chaincodeInvokeCapsule

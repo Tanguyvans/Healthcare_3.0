@@ -13,12 +13,33 @@ const { Contract } = require('fabric-contract-api');
 const { classToPlain } = require('class-transformer');
 
 class Capsule extends Contract {
-
+    
     async InitLedger(ctx) {
+
+        const sensors = [
+            {
+                SensorId: "sensor1",
+                DataType: "sensorData",
+                SensorType: 'heart',
+                Patient: 'Said',
+            },
+            {
+                SensorId: "sensor2",
+                DataType: "sensorData",
+                SensorType: 'Lungs',
+                Patient: 'Mathis',
+            }
+        ];
+
+        for (const sensor of sensors) {
+            sensor.docType = 'asset';
+            await ctx.stub.putState(sensor.SensorId, Buffer.from(stringify(sortKeysRecursive(sensor))));
+        }
 
         const assets = [
             {
                 ID: "capsule1",
+                DataType: "capsuleData",
                 SensorID: 101,
                 SensorType: 'heart',
                 TimeStamp: '2021-04',
@@ -27,17 +48,10 @@ class Capsule extends Contract {
             },
             {
                 ID: "capsule2",
+                DataType: "capsuleData",
                 SensorID: 102,
                 SensorType: 'Lungs',
                 TimeStamp: '2021-05',
-                Patient: 'Mathis',
-                value: 200,
-            },
-            {
-                ID: "capsule3",
-                SensorID: 103,
-                SensorType: 'Diabetes',
-                TimeStamp: '2022-05',
                 Patient: 'Mathis',
                 value: 200,
             },
@@ -45,153 +59,192 @@ class Capsule extends Contract {
 
         for (const asset of assets) {
             asset.docType = 'asset';
-            // example of how to write to world state deterministically
-            // use convetion of alphabetic order
-            // we insert data in alphabetic order using 'json-stringify-deterministic' and 'sort-keys-recursive'
-            // when retrieving data, in any lang, the order of data will be the same and consequently also the corresonding hash
             await ctx.stub.putState(asset.ID, Buffer.from(stringify(sortKeysRecursive(asset))));
         }
     }
-
-    // CreateAsset issues a new asset to the world state with given details.
-    async CreateAsset(ctx, id, sensorId, sensorType, timeStamp, patient, value) {
-        const exists = await this.AssetExists(ctx, id);
+    // sensor functions
+    async CreateSensor(ctx, sensorId, sensorType, patient) {
+        const exists = await this.AssetExists(ctx, sensorId);
         if (exists) {
-            throw new Error(`The asset ${id} already exists`);
+            throw new Error(`The asset ${sensorId} already exists`);
         }
+
+        const sensorData = {
+            SensorId: sensorId,
+            DataType: "sensorData",
+            Patient: patient,
+            SensorType: sensorType
+          };
+        
+        await ctx.stub.putState(sensorId, Buffer.from(JSON.stringify(sensorData)));
+        return JSON.stringify(sensorData);
+    }
+
+    async UpdateSensorPatientName(ctx, sensorId, newPatientName) {
+        const sensorDataBytes = await ctx.stub.getState(sensorId);
+        if (!sensorDataBytes || sensorDataBytes.length === 0) {
+            throw new Error(`Sensor data with ID '${sensorId}' does not exist`);
+        }
+      
+        const sensorData = JSON.parse(sensorDataBytes.toString());
+        sensorData.Patient = newPatientName;
+      
+        await ctx.stub.putState(sensorId, Buffer.from(JSON.stringify(sensorData)));
+        return JSON.stringify(sensorData);
+    }
+
+    async DeleteSensor(ctx, sensorId) {
+        const exists = await this.AssetExists(ctx, sensorId);
+        if (!exists) {
+            throw new Error(`The asset ${sensorId} does not exist`);
+        }
+      
+        await ctx.stub.deleteState(sensorId);
+    }
+    
+    async QuerySensorById(ctx, sensorId) {
+        const sensorDataBytes = await ctx.stub.getState(sensorId);
+        if (!sensorDataBytes || sensorDataBytes.length === 0) {
+            throw new Error(`Sensor data with ID '${sensorId}' does not exist`);
+        }
+      
+        const sensorData = JSON.parse(sensorDataBytes.toString());
+        return JSON.stringify(sensorData);
+    }
+
+    async QuerySensorsByType(ctx, sensorType) {
+        const startKey = '';
+        const endKey = '';
+      
+        const iterator = await ctx.stub.getStateByRange(startKey, endKey);
+      
+        const sensorsByType = [];
+      
+            while (true) {
+                const sensorData = await iterator.next();
+                if (sensorData.value && sensorData.value.value.toString()) {
+                    const parsedSensorData = JSON.parse(sensorData.value.value.toString());
+                    if (parsedSensorData.DataType === 'sensorData' && parsedSensorData.SensorType === sensorType) {
+                        sensorsByType.push(parsedSensorData);
+                    }
+                }
+            
+                if (sensorData.done) {
+                    await iterator.close();
+                    break;
+                }
+            }
+      
+        return JSON.stringify(sensorsByType);
+    }
+    
+    async QuerySensorsAvailableByType(ctx, sensorType) {
+        const startKey = '';
+        const endKey = '';
+      
+        const iterator = await ctx.stub.getStateByRange(startKey, endKey);
+      
+        const sensorsByType = [];
+      
+            while (true) {
+                const sensorData = await iterator.next();
+                if (sensorData.value && sensorData.value.value.toString()) {
+                    const parsedSensorData = JSON.parse(sensorData.value.value.toString());
+                    if (parsedSensorData.DataType === 'sensorData' && parsedSensorData.SensorType === sensorType && parsedSensorData.Patient === "none") {
+                        sensorsByType.push(parsedSensorData);
+                    }
+                }
+            
+                if (sensorData.done) {
+                    await iterator.close();
+                    break;
+                }
+            }
+      
+        return JSON.stringify(sensorsByType);
+    }
+
+    async QueryAllSensors(ctx) {
+        const startKey = '';
+        const endKey = '';
+      
+        const iterator = await ctx.stub.getStateByRange(startKey, endKey);
+      
+        const sensorsByType = [];
+      
+            while (true) {
+                const sensorData = await iterator.next();
+                if (sensorData.value && sensorData.value.value.toString()) {
+                    const parsedSensorData = JSON.parse(sensorData.value.value.toString());
+                    if (parsedSensorData.DataType === 'sensorData') {
+                        sensorsByType.push(parsedSensorData);
+                    }
+                }
+            
+                if (sensorData.done) {
+                    await iterator.close();
+                    break;
+                }
+            }
+      
+        return JSON.stringify(sensorsByType);
+    }
+
+    // capsule functions
+    async createCapsule(ctx, id, sensorId, sensorType, timestamp, patient, valueA, valueB) {
+        const collectionName = 'collectionCapsulePrivateDetails';
 
         const asset = {
             ID: id,
             SensorID: sensorId,
             SensorType: sensorType,
-            TimeStamp: timeStamp,
+            TimeStamp: timestamp,
             Patient: patient,
-            value: value,
+            valueA: ctx.stub.createCompositeKey('asset~valueA', [id]),
+            valueB: ctx.stub.createCompositeKey('asset~valueB', [id]),
         };
-        // we insert data in alphabetic order using 'json-stringify-deterministic' and 'sort-keys-recursive'
-        await ctx.stub.putState(id, Buffer.from(stringify(sortKeysRecursive(asset))));
+    
+        // Save the public data to the ledger
+        await ctx.stub.putState(id, Buffer.from(JSON.stringify(asset)));
+    
+        // Save the private data to the collection
+        await ctx.stub.putPrivateData(collectionName, asset.valueA, Buffer.from(valueA));
+        await ctx.stub.putPrivateData(collectionName, asset.valueB, Buffer.from(valueB));
+    
         return JSON.stringify(asset);
     }
 
-    async CreatePrivateAsset(ctx) {
-        const collectionName = 'collectionCapsulePrivateDetails';
-        const transientData = await ctx.stub.getTransient();
-
-        if (transientData) {
-            const capsuleData = transientData.get('capsule');
-        
-            // Vérifier si la donnée transitoire "capsule" existe et la traiter si c'est le cas
-            if (capsuleData) {
-                const capsule = JSON.parse(capsuleData.toString());
-            
-                // Ajouter la capsule à la collection de données privées
-                await ctx.stub.putPrivateData(collectionName, capsule.key, Buffer.from(JSON.stringify(capsule)));
-            
-                // Retourner la capsule ajoutée en tant que résultat
-                return capsule;
-            }
-         }
-        
-        // Si aucune donnée transitoire n'a été trouvée, renvoyer une erreur
-        throw new Error('No transient data found');
-    }
-
-    async ReadAssetByID(ctx, id) {
-        const assetBuffer = await ctx.stub.getState(id); // get the asset from chaincode state
-        if (!assetBuffer || assetBuffer.length === 0) {
-            throw new Error(`The asset ${id} does not exist`);
-        }
-        const assetJSON = assetBuffer.toString('utf8');
-        return JSON.parse(assetJSON);
-    }
-
-    async ReadAssetByPatient(ctx, patientName) {
-        const iterator = await ctx.stub.getStateByRange('', ''); // Get all assets
-        const results = [];
-        let res = await iterator.next();
-      
-        while (!res.done) {
-          const strValue = Buffer.from(res.value.value.toString()).toString('utf8');
-          const asset = JSON.parse(strValue);
-      
-          if (asset.Patient === patientName) { // Filter assets by patient name
-            results.push(asset);
-          }
-      
-          res = await iterator.next();
-        }
-      
-        await iterator.close();
-        return JSON.stringify(results);
-    }
-
-    // UpdateAsset updates an existing asset in the world state with provided parameters.
-    async UpdateAsset(ctx, id, color, size, owner, appraisedValue) {
-        const exists = await this.AssetExists(ctx, id);
-        if (!exists) {
-            throw new Error(`The asset ${id} does not exist`);
-        }
-
-        // overwriting original asset with new asset
-        const updatedAsset = {
-            ID: id,
-            SensorID: sensorId,
-            SensorType: sensorType,
-            TimeStamp: timeStamp,
-            Patient: patient,
-            value: value,
-        };
-        // we insert data in alphabetic order using 'json-stringify-deterministic' and 'sort-keys-recursive'
-        return ctx.stub.putState(id, Buffer.from(stringify(sortKeysRecursive(updatedAsset))));
-    }
-
-    // DeleteAsset deletes an given asset from the world state.
-    async DeleteAsset(ctx, id) {
-        const exists = await this.AssetExists(ctx, id);
-        if (!exists) {
-            throw new Error(`The asset ${id} does not exist`);
-        }
-        return ctx.stub.deleteState(id);
-    }
-
-    // AssetExists returns true when asset with given ID exists in world state.
-    async AssetExists(ctx, id) {
+    async queryCapsule(ctx, id) {
+        // Retrieve the asset from public data
         const assetJSON = await ctx.stub.getState(id);
-        return assetJSON && assetJSON.length > 0;
-    }
-
-    // TransferAsset updates the owner field of asset with given id in the world state.
-    async TransferAsset(ctx, id, newOwner) {
-        const assetString = await this.ReadAsset(ctx, id);
-        const asset = JSON.parse(assetString);
-        const oldOwner = asset.Owner;
-        asset.Owner = newOwner;
-        // we insert data in alphabetic order using 'json-stringify-deterministic' and 'sort-keys-recursive'
-        await ctx.stub.putState(id, Buffer.from(stringify(sortKeysRecursive(asset))));
-        return oldOwner;
-    }
-
-    // GetAllAssets returns all assets found in the world state.
-    async GetAllAssets(ctx) {
-        const allResults = [];
-        // range query with empty string for startKey and endKey does an open-ended query of all assets in the chaincode namespace.
-        const iterator = await ctx.stub.getStateByRange('', '');
-        let result = await iterator.next();
-        while (!result.done) {
-            const strValue = Buffer.from(result.value.value.toString()).toString('utf8');
-            let record;
-            try {
-                record = JSON.parse(strValue);
-            } catch (err) {
-                console.log(err);
-                record = strValue;
-            }
-            allResults.push(record);
-            result = await iterator.next();
+    
+        if (!assetJSON || assetJSON.length === 0) {
+          throw new Error(`Asset ${id} does not exist`);
         }
-        return JSON.stringify(allResults);
+    
+        return assetJSON.toString();
     }
 
+    async queryPrivateCapsule(ctx, id) {
+        const collectionName = 'collectionCapsulePrivateDetails';
+        // Retrieve the private data for valueA and valueB
+        const valueAKey = ctx.stub.createCompositeKey('asset~valueA', [id]);
+        const valueBKey = ctx.stub.createCompositeKey('asset~valueB', [id]);
+
+        const valueA = await ctx.stub.getPrivateData(collectionName, valueAKey);
+        const valueB = await ctx.stub.getPrivateData(collectionName, valueBKey);
+
+        if (!valueA || valueA.length === 0 || !valueB || valueB.length === 0) {
+            throw new Error(`Private data for asset ${id} does not exist`);
+        }
+
+        const privateData = {
+            valueA: valueA.toString(),
+            valueB: valueB.toString(),
+        };
+
+        return JSON.stringify(privateData);
+    }
 }
 
 module.exports = Capsule;
