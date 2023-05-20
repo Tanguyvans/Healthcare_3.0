@@ -117,38 +117,19 @@ app.post('/users', async function (req, res) {
 
 });
 
-// Invoke transaction on chaincode on target peers
 app.post('/createSensor', async function (req, res) {
     try {
         logger.debug('==================== INVOKE ON CHAINCODE ==================');
-        var peers = req.body.peers;
-        var chaincodeName = "capsule";
-        var channelName = "mychannel";
-        var fcn = req.body.fcn;
-        var args = req.body.args;
-        var transient = req.body.transient;
-        console.log(`Transient data is ;${transient}`)
-        logger.debug('channelName  : ' + channelName);
-        logger.debug('chaincodeName : ' + chaincodeName);
-        logger.debug('fcn  : ' + fcn);
+        var { sensorId, sensorType, patient } = req.body;
+        if (!sensorId || !sensorType || !patient) {
+            res.status(400).json({ error: 'Paramètres manquants' });
+            return;
+        }
+        var args = [sensorId, sensorType, patient];
         logger.debug('args  : ' + args);
-        if (!chaincodeName) {
-            res.json(getErrorMessage('\'chaincodeName\''));
-            return;
-        }
-        if (!channelName) {
-            res.json(getErrorMessage('\'channelName\''));
-            return;
-        }
-        if (!fcn) {
-            res.json(getErrorMessage('\'fcn\''));
-            return;
-        }
-        if (!args) {
-            res.json(getErrorMessage('\'args\''));
-            return;
-        }
-        let message = await invoke.invokeTransaction(channelName, chaincodeName, fcn, args, req.username, req.orgname, transient);
+
+
+        let message = await invoke.createSensor(args, req.username, req.orgname);
         console.log(`message result is : ${message}`)
 
         const response_payload = {
@@ -159,7 +140,61 @@ app.post('/createSensor', async function (req, res) {
         res.send(response_payload);
 
     } catch (error) {
-        console.log('in');
+        const response_payload = {
+            result: null,
+            error: error.name,
+            errorData: error.message
+        }
+        res.send(response_payload)
+    }
+});
+
+app.get('/getSensorId', async function (req, res) {
+    try {
+        logger.debug('==================== QUERY BY CHAINCODE ==================');
+
+        let message = await query.querySensorId("s1", req.username, req.orgname);
+
+        const response_payload = {
+            result: message,
+            error: null,
+            errorData: null
+        }
+
+        res.send(response_payload);
+    } catch (error) {
+        const response_payload = {
+            result: null,
+            error: error.name,
+            errorData: error.message
+        }
+        res.send(response_payload)
+    }
+});
+
+app.post('/createCapsule', async function (req, res) {
+    try {
+        logger.debug('==================== INVOKE ON CHAINCODE ==================');
+        var { sensorId, sensorType, patient } = req.body;
+        if (!sensorId || !sensorType || !patient) {
+            res.status(400).json({ error: 'Paramètres manquants' });
+            return;
+        }
+        var args = [sensorId, sensorType, patient];
+        logger.debug('args  : ' + args);
+
+
+        let message = await invoke.createSensor(args, req.username, req.orgname);
+        console.log(`message result is : ${message}`)
+
+        const response_payload = {
+            result: message,
+            error: null,
+            errorData: null
+        }
+        res.send(response_payload);
+
+    } catch (error) {
         const response_payload = {
             result: null,
             error: error.name,
