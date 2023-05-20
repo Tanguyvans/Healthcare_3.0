@@ -19,6 +19,8 @@ const helper = require('./app/helper')
 const invoke = require('./app/invoke')
 const qscc = require('./app/qscc')
 const query = require('./app/query')
+const del = require('./app/delete')
+const update = require('./app/update')
 
 app.options('*', cors());
 app.use(cors());
@@ -117,6 +119,7 @@ app.post('/users', async function (req, res) {
 
 });
 
+// Using the sensor
 app.post('/createSensor', async function (req, res) {
     try {
         logger.debug('==================== INVOKE ON CHAINCODE ==================');
@@ -149,11 +152,12 @@ app.post('/createSensor', async function (req, res) {
     }
 });
 
-app.get('/getSensorId', async function (req, res) {
+app.get('/getSensorId/:sensorId', async function (req, res) {
     try {
+        const id = req.params.sensorId;
         logger.debug('==================== QUERY BY CHAINCODE ==================');
 
-        let message = await query.querySensorId("s1", req.username, req.orgname);
+        let message = await query.querySensorId(id, req.username, req.orgname);
 
         const response_payload = {
             result: message,
@@ -172,6 +176,111 @@ app.get('/getSensorId', async function (req, res) {
     }
 });
 
+app.get('/getSensorsType/:sensorType', async function (req, res) {
+    try {
+        const sensorType = req.params.sensorType;
+        logger.debug('==================== QUERY BY CHAINCODE ==================');
+
+        let message = await query.querySensorsType(sensorType, req.username, req.orgname);
+
+        const response_payload = {
+            result: message,
+            error: null,
+            errorData: null
+        }
+
+        res.send(response_payload);
+    } catch (error) {
+        const response_payload = {
+            result: null,
+            error: error.name,
+            errorData: error.message
+        }
+        res.send(response_payload)
+    }
+});
+
+app.get('/getSensorsTypeAvailable/:sensorType', async function (req, res) {
+    try {
+        const sensorType = req.params.sensorType;
+        logger.debug('==================== QUERY BY CHAINCODE ==================');
+
+        let message = await query.querySensorsTypeAvailable(sensorType, req.username, req.orgname);
+
+        const response_payload = {
+            result: message,
+            error: null,
+            errorData: null
+        }
+
+        res.send(response_payload);
+    } catch (error) {
+        const response_payload = {
+            result: null,
+            error: error.name,
+            errorData: error.message
+        }
+        res.send(response_payload)
+    }
+});
+
+app.delete('/deleteSensorId/:sensorId', async function (req, res) {
+    try {
+        const id = req.params.sensorId; // Récupérer l'ID du capteur à partir des paramètres de requête
+
+        logger.debug('==================== DELETE SENSOR ==================');
+        
+        let message = await del.deleteSensorId(id, req.username, req.orgname);
+
+        const response_payload = {
+            result: message,
+            error: null,
+            errorData: null
+        }
+
+        res.send(response_payload);
+    } catch (error) {
+        const response_payload = {
+            result: null,
+            error: error.name,
+            errorData: error.message
+        }
+        res.send(response_payload)
+    }
+});
+
+app.put('/updateSensorPatientName', async function (req, res) {
+    try {
+        var {sensorId, newPatientName } = req.body;
+        if (!sensorId || !newPatientName) {
+            res.status(400).json({ error: 'Paramètres manquants' });
+            return;
+        }
+        var args = [sensorId, newPatientName];
+        logger.debug('args  : ' + args);
+        logger.debug('==================== UPDATE SENSOR PATIENT NAME ==================');
+
+        let message = await update.updateSensor(args, req.username, req.orgname);
+        console.log(`message result is : ${message}`)
+
+        const response_payload = {
+            result: message,
+            error: null,
+            errorData: null
+        }
+        res.send(response_payload);
+
+    } catch (error) {
+        const response_payload = {
+            result: null,
+            error: error.name,
+            errorData: error.message
+        }
+        res.send(response_payload)
+    }
+});
+
+// Using the capsules
 app.post('/createCapsule', async function (req, res) {
     try {
         logger.debug('==================== INVOKE ON CHAINCODE ==================');
