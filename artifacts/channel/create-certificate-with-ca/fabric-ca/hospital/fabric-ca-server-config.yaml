@@ -245,7 +245,7 @@ affiliations:
    hospital:
       - department1
    cardiology:
-      - sensors
+      - department1
    generalservices:
       - department1
 

@@ -477,16 +477,16 @@ INIT_REQUIRED=""
 DELAY=${10:-"3"}
 MAX_RETRY=${11:-"5"}
 
-# packageChaincode
-# installChaincode
-# queryInstalled
-# approveForMyHospital
-# approveForMyCardiology
-# approveForMyGeneralServices
-# commitChaincodeDefinition
-# queryCommittedHospital
-# queryCommittedCardiology
-# queryCommittedGeneralServices
-# sleep 5
-# chaincodeInvokeSensor
+packageChaincode
+installChaincode
+queryInstalled
+approveForMyHospital
+approveForMyCardiology
+approveForMyGeneralServices
+commitChaincodeDefinition
+queryCommittedHospital
+queryCommittedCardiology
+queryCommittedGeneralServices
+sleep 5
+chaincodeInvokeSensor
 chaincodeInvokeCapsule

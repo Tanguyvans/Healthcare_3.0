@@ -13,6 +13,11 @@ const { Contract } = require('fabric-contract-api');
 const { classToPlain } = require('class-transformer');
 
 class Capsule extends Contract {
+
+    async AssetExists(ctx, assetId) {
+        const buffer = await ctx.stub.getState(assetId);
+        return !!buffer && buffer.length > 0;
+    }
     
     async InitLedger(ctx) {
 
