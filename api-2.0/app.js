@@ -224,6 +224,30 @@ app.get('/getSensorsTypeAvailable/:sensorType', async function (req, res) {
     }
 });
 
+app.get('/getAllSensors', async function (req, res) {
+    try {
+        const sensorType = req.params.sensorType;
+        logger.debug('==================== QUERY BY CHAINCODE ==================');
+
+        let message = await query.queryAllSensors(req.username, req.orgname);
+
+        const response_payload = {
+            result: message,
+            error: null,
+            errorData: null
+        }
+
+        res.send(response_payload);
+    } catch (error) {
+        const response_payload = {
+            result: null,
+            error: error.name,
+            errorData: error.message
+        }
+        res.send(response_payload)
+    }
+});
+
 app.delete('/deleteSensorId/:sensorId', async function (req, res) {
     try {
         const id = req.params.sensorId; // Récupérer l'ID du capteur à partir des paramètres de requête
@@ -284,16 +308,18 @@ app.put('/updateSensorPatientName', async function (req, res) {
 app.post('/createCapsule', async function (req, res) {
     try {
         logger.debug('==================== INVOKE ON CHAINCODE ==================');
-        var { sensorId, sensorType, patient } = req.body;
-        if (!sensorId || !sensorType || !patient) {
+        var {id, sensorId, valueA, valueB } = req.body;
+        console.log(id, sensorId, valueA, valueB);
+        if (!id || !sensorId || !valueA || !valueB) {
             res.status(400).json({ error: 'Paramètres manquants' });
             return;
         }
-        var args = [sensorId, sensorType, patient];
+
+        var sensor = await query.querySensorId(sensorId, req.username, req.orgname);
+        var args = [id, sensor.SensorId, sensor.SensorType, Date.now(), sensor.Patient, valueA, valueB];
         logger.debug('args  : ' + args);
 
-
-        let message = await invoke.createSensor(args, req.username, req.orgname);
+        let message = await invoke.createCapsule(args, req.username, req.orgname);
         console.log(`message result is : ${message}`)
 
         const response_payload = {
@@ -303,6 +329,54 @@ app.post('/createCapsule', async function (req, res) {
         }
         res.send(response_payload);
 
+    } catch (error) {
+        const response_payload = {
+            result: null,
+            error: error.name,
+            errorData: error.message
+        }
+        res.send(response_payload)
+    }
+});
+
+app.get('/getCapsuleId/:id', async function (req, res) {
+    try {
+        const id = req.params.id;
+        logger.debug('==================== QUERY BY CHAINCODE ==================');
+
+        let message = await query.queryCapsuleId(id, req.username, req.orgname);
+
+        const response_payload = {
+            result: message,
+            error: null,
+            errorData: null
+        }
+
+        res.send(response_payload);
+    } catch (error) {
+        const response_payload = {
+            result: null,
+            error: error.name,
+            errorData: error.message
+        }
+        res.send(response_payload)
+    }
+});
+
+app.get('/getCapsulePrivateDataId/:id', async function (req, res) {
+    try {
+        const id = req.params.id;
+        logger.debug('==================== QUERY BY CHAINCODE ==================');
+
+        let message = await query.queryCapsulePrivateDataId(id, req.username, req.orgname);
+
+        const response_payload = {
+            result: message,
+            error: null,
+            errorData: null
+        }
+
+        res.send(response_payload);
     } catch (error) {
         const response_payload = {
             result: null,

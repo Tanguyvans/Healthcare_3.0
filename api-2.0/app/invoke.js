@@ -72,7 +72,10 @@ const createSensor = async (args, username, org_name) => {
     }
 }
 
-const invokeTransaction = async (channelName, chaincodeName, fcn, args, username, org_name, transientData) => {
+const createCapsule = async (args, username, org_name) => {
+    var chaincodeName = "capsule";
+    var channelName = "mychannel";
+    var fcn = "createCapsule";
     try {
         logger.debug(util.format('\n============ invoke transaction on channel %s ============\n', channelName));
 
@@ -111,29 +114,8 @@ const invokeTransaction = async (channelName, chaincodeName, fcn, args, username
 
         const contract = network.getContract(chaincodeName);
 
-        let result
-        let message;
-        if (fcn === "CreateSensor") {
-            result = await contract.submitTransaction(fcn, args[0], args[1], args[2]);
-            message = `Successfully added the car asset with key ${args[0]}`
-
-        } else if (fcn === "TransferAsset") {
-            result = await contract.submitTransaction(fcn, args[0], args[1]);
-            message = `Successfully changed car owner with key ${args[0]}`
-        } else if (fcn === "CreatePrivateAsset") {
-            let capsuleData = JSON.parse(transientData)
-            console.log(`car data is : ${JSON.stringify(capsuleData)}`)
-            let key = Object.keys(capsuleData)[0]
-            const transientDataBuffer = {}
-            transientDataBuffer[key] = Buffer.from(JSON.stringify(capsuleData.capsule))
-            result = await contract.createTransaction(fcn)
-                .setTransient(transientDataBuffer)
-                .submit()
-            message = `Successfully submitted transient data`
-        }
-        else {
-            return `Invocation require either CreateAsset or TransferAsset as function but got ${fcn}`
-        }
+        let result = await contract.submitTransaction(fcn, args[0], args[1], args[2], args[3], args[4], args[5], args[6]);
+        let message = `Successfully added the car asset with key ${args[0]}`
 
         await gateway.disconnect();
 
@@ -146,14 +128,11 @@ const invokeTransaction = async (channelName, chaincodeName, fcn, args, username
 
         return response;
 
-
     } catch (error) {
-
         console.log(`Getting error: ${error}`)
         return error.message
-
     }
 }
 
-exports.invokeTransaction = invokeTransaction;
 exports.createSensor = createSensor;
+exports.createCapsule = createCapsule;

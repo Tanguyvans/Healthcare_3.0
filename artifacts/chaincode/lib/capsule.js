@@ -196,7 +196,7 @@ class Capsule extends Contract {
     }
 
     // capsule functions
-    async createCapsule(ctx, id, sensorId, sensorType, timestamp, patient, valueA, valueB) {
+    async CreateCapsule(ctx, id, sensorId, sensorType, timestamp, patient, valueA, valueB) {
         const collectionName = 'collectionCapsulePrivateDetails';
 
         const asset = {
@@ -219,7 +219,7 @@ class Capsule extends Contract {
         return JSON.stringify(asset);
     }
 
-    async queryCapsule(ctx, id) {
+    async QueryCapsuleId(ctx, id) {
         // Retrieve the asset from public data
         const assetJSON = await ctx.stub.getState(id);
     
@@ -230,7 +230,7 @@ class Capsule extends Contract {
         return assetJSON.toString();
     }
 
-    async queryPrivateCapsule(ctx, id) {
+    async QueryPrivateCapsuleId(ctx, id) {
         const collectionName = 'collectionCapsulePrivateDetails';
         // Retrieve the private data for valueA and valueB
         const valueAKey = ctx.stub.createCompositeKey('asset~valueA', [id]);
