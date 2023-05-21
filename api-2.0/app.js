@@ -33,7 +33,7 @@ app.set('secret', 'thisismysecret');
 app.use(expressJWT({
     secret: 'thisismysecret'
 }).unless({
-    path: ['/','/users','/users/login', '/register']
+    path: ['/','/users','/sensorCreateCapsule']
 }));
 app.use(bearerToken());
 
@@ -41,7 +41,7 @@ logger.level = 'debug';
 
 app.use((req, res, next) => {
     logger.debug('New req for %s', req.originalUrl);
-    if ( req.originalUrl === '/' || req.originalUrl.indexOf('/users') >= 0 || req.originalUrl.indexOf('/users/login') >= 0 || req.originalUrl.indexOf('/register') >= 0) {
+    if ( req.originalUrl === '/' || req.originalUrl.indexOf('/users') >= 0 || req.originalUrl.indexOf('/sensorCreateCapsule') >= 0) {
         return next();
     }
     var token = req.token;
@@ -305,7 +305,7 @@ app.put('/updateSensorPatientName', async function (req, res) {
 });
 
 // Using the capsules
-app.post('/createCapsule', async function (req, res) {
+app.post('/createCapsuleMannually', async function (req, res) {
     try {
         logger.debug('==================== INVOKE ON CHAINCODE ==================');
         var {id, sensorId, valueA, valueB } = req.body;
@@ -315,6 +315,7 @@ app.post('/createCapsule', async function (req, res) {
             return;
         }
 
+        console.log(req.username, req.orgname);
         var sensor = await query.querySensorId(sensorId, req.username, req.orgname);
         var args = [id, sensor.SensorId, sensor.SensorType, Date.now(), sensor.Patient, valueA, valueB];
         logger.debug('args  : ' + args);
@@ -387,44 +388,12 @@ app.get('/getCapsulePrivateDataId/:id', async function (req, res) {
     }
 });
 
-app.get('/channels/:channelName/chaincodes/:chaincodeName', async function (req, res) {
+app.get('/getCapsuleByPatient/:patient', async function (req, res) {
     try {
+        const patient = req.params.patient;
         logger.debug('==================== QUERY BY CHAINCODE ==================');
 
-        var channelName = req.params.channelName;
-        var chaincodeName = req.params.chaincodeName;
-        console.log(`chaincode name is :${chaincodeName}`)
-        let args = req.query.args;
-        let fcn = req.query.fcn;
-        let peer = req.query.peer;
-
-        logger.debug('channelName : ' + channelName);
-        logger.debug('chaincodeName : ' + chaincodeName);
-        logger.debug('fcn : ' + fcn);
-        logger.debug('args : ' + args);
-
-        if (!chaincodeName) {
-            res.json(getErrorMessage('\'chaincodeName\''));
-            return;
-        }
-        if (!channelName) {
-            res.json(getErrorMessage('\'channelName\''));
-            return;
-        }
-        if (!fcn) {
-            res.json(getErrorMessage('\'fcn\''));
-            return;
-        }
-        if (!args) {
-            res.json(getErrorMessage('\'args\''));
-            return;
-        }
-        console.log('args==========', args);
-        args = args.replace(/'/g, '"');
-        args = JSON.parse(args);
-        logger.debug(args);
-
-        let message = await query.query(channelName, chaincodeName, args, fcn, req.username, req.orgname);
+        let message = await query.queryCapsuleByPatient(patient, req.username, req.orgname);
 
         const response_payload = {
             result: message,
@@ -443,44 +412,18 @@ app.get('/channels/:channelName/chaincodes/:chaincodeName', async function (req,
     }
 });
 
-app.get('/qscc/channels/:channelName/chaincodes/:chaincodeName', async function (req, res) {
+app.get('/getPrivateCapsuleByPatient/:patient', async function (req, res) {
     try {
+        const patient = req.params.patient;
         logger.debug('==================== QUERY BY CHAINCODE ==================');
 
-        var channelName = req.params.channelName;
-        var chaincodeName = req.params.chaincodeName;
-        console.log(`chaincode name is :${chaincodeName}`)
-        let args = req.query.args;
-        let fcn = req.query.fcn;
-        // let peer = req.query.peer;
+        let message = await query.queryPrivateCapsuleByPatient(patient, req.username, req.orgname);
 
-        logger.debug('channelName : ' + channelName);
-        logger.debug('chaincodeName : ' + chaincodeName);
-        logger.debug('fcn : ' + fcn);
-        logger.debug('args : ' + args);
-
-        if (!chaincodeName) {
-            res.json(getErrorMessage('\'chaincodeName\''));
-            return;
+        const response_payload = {
+            result: message,
+            error: null,
+            errorData: null
         }
-        if (!channelName) {
-            res.json(getErrorMessage('\'channelName\''));
-            return;
-        }
-        if (!fcn) {
-            res.json(getErrorMessage('\'fcn\''));
-            return;
-        }
-        if (!args) {
-            res.json(getErrorMessage('\'args\''));
-            return;
-        }
-        console.log('args==========', args);
-        args = args.replace(/'/g, '"');
-        args = JSON.parse(args);
-        logger.debug(args);
-
-        let response_payload = await qscc.qscc(channelName, chaincodeName, args, fcn, req.username, req.orgname);
 
         res.send(response_payload);
     } catch (error) {

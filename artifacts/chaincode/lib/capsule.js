@@ -23,13 +23,13 @@ class Capsule extends Contract {
 
         const sensors = [
             {
-                SensorId: "sensor1",
+                SensorId: "s1",
                 DataType: "sensorData",
                 SensorType: 'heart',
                 Patient: 'Said',
             },
             {
-                SensorId: "sensor2",
+                SensorId: "s2",
                 DataType: "sensorData",
                 SensorType: 'Lungs',
                 Patient: 'Mathis',
@@ -39,32 +39,6 @@ class Capsule extends Contract {
         for (const sensor of sensors) {
             sensor.docType = 'asset';
             await ctx.stub.putState(sensor.SensorId, Buffer.from(stringify(sortKeysRecursive(sensor))));
-        }
-
-        const assets = [
-            {
-                ID: "capsule1",
-                DataType: "capsuleData",
-                SensorID: 101,
-                SensorType: 'heart',
-                TimeStamp: '2021-04',
-                Patient: 'Said',
-                value: 300,
-            },
-            {
-                ID: "capsule2",
-                DataType: "capsuleData",
-                SensorID: 102,
-                SensorType: 'Lungs',
-                TimeStamp: '2021-05',
-                Patient: 'Mathis',
-                value: 200,
-            },
-        ];
-
-        for (const asset of assets) {
-            asset.docType = 'asset';
-            await ctx.stub.putState(asset.ID, Buffer.from(stringify(sortKeysRecursive(asset))));
         }
     }
     // sensor functions
@@ -202,6 +176,7 @@ class Capsule extends Contract {
         const asset = {
             ID: id,
             SensorID: sensorId,
+            DataType: "capsuleData",
             SensorType: sensorType,
             TimeStamp: timestamp,
             Patient: patient,
@@ -231,6 +206,12 @@ class Capsule extends Contract {
     }
 
     async QueryPrivateCapsuleId(ctx, id) {
+        const assetJSON = await ctx.stub.getState(id);
+
+        if (!assetJSON || assetJSON.length === 0) {
+            throw new Error(`Asset ${id} does not exist`);
+        }
+
         const collectionName = 'collectionCapsulePrivateDetails';
         // Retrieve the private data for valueA and valueB
         const valueAKey = ctx.stub.createCompositeKey('asset~valueA', [id]);
@@ -248,8 +229,77 @@ class Capsule extends Contract {
             valueB: valueB.toString(),
         };
 
-        return JSON.stringify(privateData);
+        const assetData = JSON.parse(assetJSON.toString());
+        assetData.privateData = privateData;
+
+        return JSON.stringify(assetData);
     }
+
+    async QueryCapsulesByPatient(ctx, patient) {
+        const startKey = '';
+        const endKey = '';
+      
+        const iterator = await ctx.stub.getStateByRange(startKey, endKey);
+        const capsulesByPatient = [];
+      
+        while (true) {
+            const result = await iterator.next();
+        
+            if (result.value && result.value.value.toString()) {
+            const capsuleData = JSON.parse(result.value.value.toString());
+        
+            if (capsuleData.DataType === 'capsuleData' && capsuleData.Patient === patient) {
+                capsulesByPatient.push(capsuleData);
+            }
+            }
+        
+            if (result.done) {
+            await iterator.close();
+            break;
+            }
+        }
+        
+        return JSON.stringify(capsulesByPatient);
+    }
+
+    async QueryPrivateCapsulesByPatient(ctx, patient) {
+        const collectionName = 'collectionCapsulePrivateDetails';
+        const startKey = '';
+        const endKey = '';
+      
+        const iterator = await ctx.stub.getStateByRange(startKey, endKey);
+        const capsulesByPatient = [];
+      
+        while (true) {
+            const result = await iterator.next();
+        
+            if (result.value && result.value.value.toString()) {
+                const capsuleData = JSON.parse(result.value.value.toString());
+        
+                if (capsuleData.DataType === 'capsuleData' && capsuleData.Patient === patient) {
+                const privateDataA = await ctx.stub.getPrivateData(collectionName, capsuleData.valueA);
+                const privateDataB = await ctx.stub.getPrivateData(collectionName, capsuleData.valueB);
+        
+                const parsedCapsuleData = {
+                    ...capsuleData,
+                    privateValueA: privateDataA.toString('utf8'),
+                    privateValueB: privateDataB.toString('utf8')
+                };
+        
+                capsulesByPatient.push(parsedCapsuleData);
+                }
+            }
+        
+            if (result.done) {
+                await iterator.close();
+                break;
+            }
+        }
+        return JSON.stringify(capsulesByPatient);
+    }
+      
+      
+    
 }
 
 module.exports = Capsule;

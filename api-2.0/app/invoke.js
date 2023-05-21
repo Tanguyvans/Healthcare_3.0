@@ -75,7 +75,7 @@ const createSensor = async (args, username, org_name) => {
 const createCapsule = async (args, username, org_name) => {
     var chaincodeName = "capsule";
     var channelName = "mychannel";
-    var fcn = "createCapsule";
+    var fcn = "CreateCapsule";
     try {
         logger.debug(util.format('\n============ invoke transaction on channel %s ============\n', channelName));
 

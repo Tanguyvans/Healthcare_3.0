@@ -434,7 +434,7 @@ chaincodeInvokeCapsule() {
         --peerAddresses localhost:7051 --tlsRootCertFiles $PEER0_HOSPITAL_CA \
         --peerAddresses localhost:9051 --tlsRootCertFiles $PEER0_CARDIOLOGY_CA \
         --peerAddresses localhost:11051 --tlsRootCertFiles $PEER0_GENERALSERVICES_CA \
-        -c '{"function": "createCapsule","Args":["asset1","sensor1", "heart","2023-05-18T10:00:00Z", "Tanguy","10","20"]}'
+        -c '{"function": "CreateCapsule","Args":["asset1","sensor1", "heart","2023-05-18T10:00:00Z", "Tanguy","10","20"]}'
 
     result=$(bin/peer chaincode invoke -o localhost:7050 \
         --ordererTLSHostnameOverride orderer.network.com \
@@ -444,25 +444,15 @@ chaincodeInvokeCapsule() {
         --peerAddresses localhost:7051 --tlsRootCertFiles $PEER0_HOSPITAL_CA \
         --peerAddresses localhost:9051 --tlsRootCertFiles $PEER0_CARDIOLOGY_CA \
         --peerAddresses localhost:11051 --tlsRootCertFiles $PEER0_GENERALSERVICES_CA \
-        -c '{"function": "queryCapsule","Args":["asset1"]}' | jq -r '.payload.data')
+        -c '{"function": "QueryCapsulesByPatient","Args":["Said"]}' | jq -r '.payload.data')
 
     echo $result
 
     # Query private asset
-    result=$(bin/peer chaincode query -C $CHANNEL_NAME -n $CC_NAME -c '{"Args":["queryPrivateCapsule","asset1"]}')
+    result=$(bin/peer chaincode query -C $CHANNEL_NAME -n $CC_NAME -c '{"Args":["QueryPrivateCapsulesByPatient","Tanguy"]}')
     echo $result
 
-    # export CAPSULE=$(echo -n "{\"key\":\"pcaps\", \"make\":\"Tesla\",\"model\":\"Tesla A1\",\"color\":\"White\",\"owner\":\"pavan\",\"price\":\"10000\"}" | base64 | tr -d \\n)
-    # bin/peer chaincode invoke -o localhost:7050 \
-    #     --ordererTLSHostnameOverride orderer.network.com \
-    #     --tls $CORE_PEER_TLS_ENABLED \
-    #     --cafile $ORDERER_CA \
-    #     -C $CHANNEL_NAME -n ${CC_NAME} \
-    #     --peerAddresses localhost:7051 --tlsRootCertFiles $PEER0_HOSPITAL_CA \
-    #     --peerAddresses localhost:9051 --tlsRootCertFiles $PEER0_CARDIOLOGY_CA \
-    #     --peerAddresses localhost:11051 --tlsRootCertFiles $PEER0_GENERALSERVICES_CA \
-    #     -c '{"function": "CreatePrivateAsset","Args":[]}' \
-    #     --transient "{\"capsule\":\"$CAPSULE\"}"
+
 }
 
 CHANNEL_NAME="mychannel"
