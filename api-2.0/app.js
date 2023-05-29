@@ -237,7 +237,7 @@ app.get('/getAllSensors', async function (req, res) {
             errorData: null
         }
 
-        res.send(response_payload);
+        res.render('sensorList', { sensors: message });
     } catch (error) {
         const response_payload = {
             result: null,

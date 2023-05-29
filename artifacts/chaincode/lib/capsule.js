@@ -169,6 +169,31 @@ class Capsule extends Contract {
         return JSON.stringify(sensorsByType);
     }
 
+    async QueryAllSensorsAvailable(ctx) {
+        const startKey = '';
+        const endKey = '';
+      
+        const iterator = await ctx.stub.getStateByRange(startKey, endKey);
+      
+        const sensorsByType = [];
+            while (true) {
+                const sensorData = await iterator.next();
+                if (sensorData.value && sensorData.value.value.toString()) {
+                    const parsedSensorData = JSON.parse(sensorData.value.value.toString());
+                    if (parsedSensorData.DataType === 'sensorData' && parsedSensorData.Patient === "none") {
+                        sensorsByType.push(parsedSensorData);
+                    }
+                }
+            
+                if (sensorData.done) {
+                    await iterator.close();
+                    break;
+                }
+            }
+      
+        return JSON.stringify(sensorsByType);
+    }
+
     // capsule functions
     async CreateCapsule(ctx, id, sensorId, sensorType, timestamp, patient, valueA, valueB) {
         const collectionName = 'collectionCapsulePrivateDetails';

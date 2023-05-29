@@ -6,10 +6,10 @@
 <body>
     <h1>Add Sensor</h1>
 
-    <% if (result) { %>
-        <% if (result === 'success') { %>
+    <% if (success) { %>
+        <% if (success === 'success') { %>
           <div style="color: green;">Ajout du capteur réussi !</div>
-        <% } else if (result === 'failure') { %>
+        <% } else if (success === 'failure') { %>
           <div style="color: red;">Échec de l'ajout du capteur.</div>
         <% } %>
     <% } %>
@@ -35,5 +35,13 @@
             <button type="submit">Add sensor</button>
         </div>
     </form>
+    <div>
+        <button onclick="redirectToDashboard()">Retour</button>
+        <script>
+            function redirectToDashboard() {
+                window.location.href = "/dashboard";
+            }
+        </script>
+    </div>
 </body>
 </html>

@@ -8,7 +8,7 @@ This package contains type definitions for tough-cookie (https://github.com/sale
 Files were exported from https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/tough-cookie.
 
 ### Additional Details
- * Last updated: Tue, 31 Mar 2020 23:35:07 GMT
+ * Last updated: Thu, 14 Apr 2022 07:01:24 GMT
  * Dependencies: none
  * Global values: none
 
