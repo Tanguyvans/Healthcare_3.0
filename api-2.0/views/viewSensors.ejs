@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Liste des capteurs</title>
+</head>
+<body>
+    <h1>Liste des capteurs</h1>
+
+    <form id="filterForm" action="/viewSensors" method="GET">
+        <div>
+            <label for="sensorType">Sensor type:</label>
+            <select id="sensorType" name="sensorType">
+                <option value="All">All</option>
+                <option value="Heart">Heart</option>
+                <option value="Lungs">Lungs</option>
+                <option value="Temperature">Temperature</option>
+            </select>
+        </div>
+        <label>
+            <input type="checkbox" name="available" value="true">
+            Disponible
+        </label>
+        <br>
+        <button type="submit">Filtrer</button>
+    </form>
+
+    <div>
+        <button onclick="redirectToDashboard()">Retour</button>
+        <script>
+            function redirectToDashboard() {
+                window.location.href = "/dashboard";
+            }
+        </script>
+    </div>
+
+    <% if (sensors && sensors.length > 0) { %>
+        <div id="sensorList">
+            <% sensors.forEach(function(sensor) { %>
+                <div>
+                    <strong>ID:</strong> <%= sensor.SensorId %><br>
+                    <strong>Type:</strong> <%= sensor.SensorType %><br>
+                    <strong>Nom:</strong> <%= sensor.Patient %><br>
+                </div>
+                <hr>
+            <% }); %>
+        </div>
+    <% } else { %>
+        <div id="sensorList">
+            Aucun capteur disponible.
+        </div>
+    <% } %>
+
+</body>
+</html>
