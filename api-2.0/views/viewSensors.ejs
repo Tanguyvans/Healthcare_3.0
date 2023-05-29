@@ -25,6 +25,15 @@
     </form>
 
     <div>
+        <button onclick="redirectToAddSensor()">Add sensor</button>
+        <script>
+            function redirectToAddSensor() {
+                window.location.href = "/addSensor";
+            }
+        </script>
+    </div>
+
+    <div>
         <button onclick="redirectToDashboard()">Retour</button>
         <script>
             function redirectToDashboard() {
@@ -35,11 +44,13 @@
 
     <% if (sensors && sensors.length > 0) { %>
         <div id="sensorList">
-            <% sensors.forEach(function(sensor) { %>
-                <div>
+            <% sensors.forEach(function(sensor, index) { %>
+                <div id="sensor-<%= index %>">
                     <strong>ID:</strong> <%= sensor.SensorId %><br>
                     <strong>Type:</strong> <%= sensor.SensorType %><br>
                     <strong>Nom:</strong> <%= sensor.Patient %><br>
+                    <input type="text" id="newPatientInput-<%= index %>" placeholder="Nouveau nom de patient">
+                    <button onclick="updateSensor(index)">Modifier</button>
                 </div>
                 <hr>
             <% }); %>
@@ -49,6 +60,7 @@
             Aucun capteur disponible.
         </div>
     <% } %>
+    
 
 </body>
 </html>
