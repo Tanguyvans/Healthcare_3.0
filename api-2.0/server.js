@@ -48,6 +48,9 @@ app.use(
     extended: true,
   })
 );
+
+app.use(express.static('views'));
+
 app.use(cookieParser());
 
 app.get("/", (req, res) => {
@@ -124,17 +127,45 @@ app.get('/viewSensors', cookieJwtAuth, async function (req, res) {
         var message = await query.queryAllSensors(username, orgName);
       }
 
-      console.log(message);
-
-      res.render('viewSensors', { sensors: message });
+      res.render('viewSensors', {sensors: message });
   } catch (error) {
-      const response_payload = {
-          result: null,
-          error: error.name,
-          errorData: error.message
-      }
-      res.send(response_payload)
+    res.render('viewSensors');
   }
+});
+
+app.post('/updateSensor', cookieJwtAuth, async function (req, res) {
+  try {
+    var {sensorId, newPatient } = req.body;
+    if (!newPatient) {
+        res.status(400).json({ error: 'Paramètres manquants' });
+        return;
+    }
+    var args = [sensorId, newPatient];
+    logger.debug('args  : ' + args);
+    logger.debug('==================== UPDATE SENSOR PATIENT NAME ==================');
+
+    const {username, orgName} = getUserInfo(req);
+    await update.updateSensor(args, username, orgName);
+  } catch (error) {
+  }
+
+  res.redirect(`/viewSensors`);
+});
+
+app.post('/deleteSensor', cookieJwtAuth, async function (req, res) {
+  try {
+    var {sensorId} = req.body;
+    var args = [sensorId];
+    logger.debug('args  : ' + args);
+    logger.debug('==================== UPDATE SENSOR PATIENT NAME ==================');
+
+    const {username, orgName} = getUserInfo(req);
+    await del.deleteSensorId(args, username, orgName);
+  } catch (error) {
+
+  }
+
+  res.redirect(`/viewSensors`);
 });
 
 app.listen(PORT, () => {

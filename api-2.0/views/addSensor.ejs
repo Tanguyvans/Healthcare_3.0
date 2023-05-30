@@ -2,11 +2,9 @@
 <html>
 <head>
     <title>Add Sensor</title>
-    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/css/addSensor.css">
 </head>
 <body>
-    <h1>Add Sensor</h1>
-
     <% if (success) { %>
         <% if (success === 'success') { %>
           <div id="success-message;">Ajout du capteur réussi !</div>
@@ -14,35 +12,37 @@
           <div style="color: red;">Échec de l'ajout du capteur.</div>
         <% } %>
     <% } %>
-
-    <form id="addSensorForm" action="/addSensor" method="POST">
-        <div>
-            <label for="sensorId">SensorId:</label>
-            <input type="text" id="sensorId" name="sensorId">
+    <div class="container">
+        <h1>Add Sensor</h1>
+        <form id="addSensorForm" action="/addSensor" method="POST">
+            <div>
+                <label for="sensorId">SensorId:</label>
+                <input type="text" id="sensorId" name="sensorId">
+            </div>
+            <div>
+                <label for="sensorType">Sensor type:</label>
+                <select id="sensorType" name="sensorType">
+                    <option value="Heart">Heart</option>
+                    <option value="Lungs">Lungs</option>
+                    <option value="Temperature">Temperature</option>
+                </select>
+            </div>
+            <div>
+                <label for="patient">Patient:</label>
+                <input type="text" id="patient" name="patient">
+            </div>
+            <div>
+                <button type="submit">Add sensor</button>
+            </div>
+        </form>
+        <div class="button-container">
+            <button onclick="redirectToDashboard()">Retour</button>
         </div>
-        <div>
-            <label for="sensorType">Sensor type:</label>
-            <select id="sensorType" name="sensorType">
-                <option value="Heart">Heart</option>
-                <option value="Lungs">Lungs</option>
-                <option value="Temperature">Temperature</option>
-            </select>
-        </div>
-        <div>
-            <label for="patient">Patient:</label>
-            <input type="text" id="patient" name="patient">
-        </div>
-        <div>
-            <button type="submit">Add sensor</button>
-        </div>
-    </form>
-    <div>
-        <button onclick="redirectToDashboard()">Retour</button>
-        <script>
-            function redirectToDashboard() {
-                window.location.href = "/viewSensors";
-            }
-        </script>
     </div>
+   <script>
+        function redirectToDashboard() {
+            window.location.href = "/viewSensors";
+        }
+    </script>
 </body>
 </html>

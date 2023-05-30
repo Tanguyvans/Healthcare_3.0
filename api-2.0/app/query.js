@@ -12,7 +12,6 @@ const querySensorId = async (id, username, org_name) => {
     var chaincodeName = "capsule";
     var channelName = "mychannel";
     try {
-        console.log(id);
         const ccp = await helper.getCCP(org_name) //JSON.parse(ccpJSON);
         const walletPath = await helper.getWalletPath(org_name) //.join(process.cwd(), 'wallet');
         const wallet = await Wallets.newFileSystemWallet(walletPath);

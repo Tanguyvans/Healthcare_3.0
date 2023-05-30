@@ -37,6 +37,7 @@ const deleteSensorId = async (id, username, org_name) => {
 
         // Get the contract from the network.
         const contract = network.getContract(chaincodeName);
+        console.log(id);
         await contract.submitTransaction("DeleteSensor",id);
             
     } catch (error) {

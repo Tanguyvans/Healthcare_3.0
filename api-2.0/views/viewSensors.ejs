@@ -2,10 +2,10 @@
 <html>
 <head>
     <title>Liste des capteurs</title>
+    <link rel="stylesheet" href="/css/viewSensors.css">
 </head>
 <body>
     <h1>Liste des capteurs</h1>
-
     <form id="filterForm" action="/viewSensors" method="GET">
         <div>
             <label for="sensorType">Sensor type:</label>
@@ -24,43 +24,67 @@
         <button type="submit">Filtrer</button>
     </form>
 
-    <div>
+    <div class="button-container">
         <button onclick="redirectToAddSensor()">Add sensor</button>
-        <script>
-            function redirectToAddSensor() {
-                window.location.href = "/addSensor";
-            }
-        </script>
-    </div>
-
-    <div>
         <button onclick="redirectToDashboard()">Retour</button>
-        <script>
-            function redirectToDashboard() {
-                window.location.href = "/dashboard";
-            }
-        </script>
     </div>
 
-    <% if (sensors && sensors.length > 0) { %>
-        <div id="sensorList">
-            <% sensors.forEach(function(sensor, index) { %>
-                <div id="sensor-<%= index %>">
-                    <strong>ID:</strong> <%= sensor.SensorId %><br>
-                    <strong>Type:</strong> <%= sensor.SensorType %><br>
-                    <strong>Nom:</strong> <%= sensor.Patient %><br>
-                    <input type="text" id="newPatientInput-<%= index %>" placeholder="Nouveau nom de patient">
-                    <button onclick="updateSensor(index)">Modifier</button>
-                </div>
-                <hr>
-            <% }); %>
-        </div>
-    <% } else { %>
-        <div id="sensorList">
-            Aucun capteur disponible.
-        </div>
-    <% } %>
-    
+    <script>
+        function redirectToAddSensor() {
+            window.location.href = "/addSensor";
+        }
+        function redirectToDashboard() {
+            window.location.href = "/dashboard";
+        }
+    </script>
 
+    <div class="container">
+        <% if (sensors && sensors.length > 0) { %>
+            <div id="sensorListBackground">
+                <div id="sensorList">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>sensorId</th>
+                                <th>sensorType</th>
+                                <th>patient</th>
+                                <th>newPatient</th>
+                                <th>modifier</th>
+                                <th>supprimer</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% sensors.forEach(function(sensor) { %>
+                                <tr>
+                                    <td><%= sensor.SensorId %></td>
+                                    <td><%= sensor.SensorType %></td>
+                                    <td><%= sensor.Patient %></td>
+                                    <td>
+                                        <form action="/updateSensor" method="POST">
+                                            <input type="hidden" name="sensorId" value="<%= sensor.SensorId %>">
+                                            <input type="text" name="newPatient" placeholder="Nouveau nom de patient">
+                                    </td>
+                                    <td>
+                                            <button type="submit">Modifier</button>
+                                        </form>
+                                    </td>
+                                    <td>
+                                        <form action="/deleteSensor" method="POST">
+                                            <input type="hidden" name="sensorId" value="<%= sensor.SensorId %>">
+                                            <button class="delete-button" type="submit">Supprimer</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            <% }); %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        <% } else { %>
+            <div id="sensorList">
+                Aucun capteur disponible.
+            </div>
+        <% } %>
+    </div>    
 </body>
 </html>

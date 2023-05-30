@@ -2,18 +2,21 @@
 <html>
 <head>
     <title>Dashboard</title>
+    <link rel="stylesheet" href="/css/dashboard.css">
 </head>
 <body>
-    <h1>Welcome to the Dashboard</h1>
-    <h2>Intéraction avec les capteurs</h2>  
-    <div>
+    <h1>Welcome to the Dashboard</h1> 
+    <div id="buttonContainer">
         <button onclick="redirectToSensor()">Consulter les capteurs</button>
-        <script>
-            function redirectToSensor() {
-                window.location.href = "/viewSensors";
-            }
-        </script>
+        <button onclick="redirectToMonitoring()">Consulter les données de monitoring</button>
     </div>
-    <h2>intéraction avec les données de monitoring</h2>
+    <script>
+        function redirectToSensor() {
+            window.location.href = "/viewSensors";
+        }
+        function redirectToMonitoring() {
+            window.location.href = "/viewMonitoring";
+        }
+    </script>
 </body>
 </html>

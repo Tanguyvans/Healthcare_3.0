@@ -2,25 +2,28 @@
 <html>
 <head>
     <title>Login</title>
+    <link rel="stylesheet" href="/css/login.css">
 </head>
 <body>
-    <h1>Login</h1>
-    <form id="loginForm" action="/login" method="POST">
-        <div>
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username">
-        </div>
-        <div>
-            <label for="orgName">Organization Name:</label>
-            <select id="orgName" name="orgName">
-                <option value="Hospital">Hospital</option>
-                <option value="Cardiology">Service cardiologie</option>
-                <option value="GeneralServices">Service général</option>
-            </select>
-        </div>
-        <div>
-            <button type="submit">Login</button>
-        </div>
-    </form>
+    <div class="container">
+        <h1>Login</h1>
+        <form id="loginForm" action="/login" method="POST">
+            <div>
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username">
+            </div>
+            <div>
+                <label for="orgName">Organization:</label>
+                <select id="orgName" name="orgName">
+                    <option value="Hospital">Hospital</option>
+                    <option value="Cardiology">Service cardiologie</option>
+                    <option value="GeneralServices">Service général</option>
+                </select>
+            </div>
+            <div>
+                <button type="submit">Login</button>
+            </div>
+        </form>
+    </div>
 </body>
 </html>
