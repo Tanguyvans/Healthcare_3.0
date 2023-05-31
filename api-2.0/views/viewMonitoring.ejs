@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="/css/viewMonitoring.css">
+</head>
+<body>
+    <h1>Liste de monitoring</h1>
+    <form id="filterForm" action="/viewMonitoring" method="GET">
+        <div>
+            <label for="patient">Nom du patient :</label>
+            <input type="text" id="patient" name="patient">
+        </div>
+        <div>
+            <label for="sensorId">ID du capteur :</label>
+            <select id="sensorId" name="sensorId">
+                <option value="all">All</option>
+                <% if (sensors) { %>
+                    <% sensors.forEach(function(sensor) { %>
+                        <option value="<%= sensor.SensorId %>"><%= sensor.SensorId %></option>
+                    <% }); %>
+                <% } %>
+            </select>            
+        </div>
+        <button type="submit">Filtrer</button>
+    </form>
+    <div class="button-container">
+        <button onclick="redirectToDashboard()">Retour</button>
+    </div>
+    <script>
+        function redirectToDashboard() {
+            window.location.href = "/dashboard";
+        }
+    </script>
+    <div class="container">
+        <% if (typeof monitoring !== 'undefined') { %>
+            <div id="monitoringBackground">
+                <div id="monitoring">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>sensorId</th>
+                                <th>sensorType</th>
+                                <th>patient</th>
+                                <th>timestamp</th>
+                                <th>valueA</th>
+                                <th>valueB</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% monitoring.forEach(function(capsule) { %>
+                                <tr>
+                                    <td><%= capsule.ID %></td>
+                                    <td><%= capsule.SensorID %></td>
+                                    <td><%= capsule.SensorType %></td>
+                                    <td><%= capsule.Patient %></td>
+                                    <td><%= capsule.TimeStamp %></td>
+                                    <td><%= capsule.valueA %></td>
+                                    <td><%= capsule.valueB %></td>
+                                </tr>
+                            <% }); %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        <% } else { %>
+            <div id="monitoring">
+                Aucun capteur disponible.
+            </div>
+        <% } %>
+    </div>  
+</body>
+</html>

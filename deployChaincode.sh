@@ -479,4 +479,4 @@ queryCommittedCardiology
 queryCommittedGeneralServices
 sleep 5
 chaincodeInvokeSensor
-chaincodeInvokeCapsule
+#chaincodeInvokeCapsule

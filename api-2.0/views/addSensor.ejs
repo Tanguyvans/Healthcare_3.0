@@ -5,15 +5,15 @@
     <link rel="stylesheet" href="/css/addSensor.css">
 </head>
 <body>
-    <% if (success) { %>
-        <% if (success === 'success') { %>
-          <div id="success-message;">Ajout du capteur réussi !</div>
-        <% } else if (success === 'failure') { %>
-          <div style="color: red;">Échec de l'ajout du capteur.</div>
-        <% } %>
-    <% } %>
     <div class="container">
         <h1>Add Sensor</h1>
+        <% if (success) { %>
+            <% if (success === 'success') { %>
+                <div class="message">Ajout du capteur réussi !</div>
+            <% } else if (success === 'failure') { %>
+                <div class="message">Échec de l'ajout du capteur.</div>
+            <% } %>
+        <% } %>
         <form id="addSensorForm" action="/addSensor" method="POST">
             <div>
                 <label for="sensorId">SensorId:</label>

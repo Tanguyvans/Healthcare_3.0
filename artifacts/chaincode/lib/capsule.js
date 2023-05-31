@@ -25,7 +25,7 @@ class Capsule extends Contract {
             {
                 SensorId: "s1",
                 DataType: "sensorData",
-                SensorType: 'heart',
+                SensorType: 'Heart',
                 Patient: 'Said',
             },
             {

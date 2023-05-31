@@ -90,10 +90,10 @@ app.post('/addSensor', cookieJwtAuth, async function (req, res) {
     logger.debug('args  : ' + args);
 
     const {username, orgName} = getUserInfo(req);
+    
     let message = await invoke.createSensor(args, username, orgName);
 
-    res.render('addSensor', { success: "success" });
-
+    res.render('addSensor', { success: message });
   } catch (error) {
     res.render('addSensor', { success: "failure" });
   }
@@ -166,6 +166,31 @@ app.post('/deleteSensor', cookieJwtAuth, async function (req, res) {
   }
 
   res.redirect(`/viewSensors`);
+});
+
+app.get('/viewMonitoring', cookieJwtAuth, async function (req, res) {
+  try {
+    const {username, orgName} = getUserInfo(req);
+    var sensors = await query.queryAllSensors(username, orgName);
+
+    const sensorId = req.query.sensorId;
+    const patient = req.query.patient;
+
+    if(typeof patient === 'undefined'){
+      var message = "undefined";
+    }else {
+      var message = await query.queryCapsuleByPatient(patient, username, orgName);
+    }
+
+    if(message === 'undefined'){
+      res.render('viewMonitoring', {sensors: sensors });
+    }else {
+      res.render('viewMonitoring', {sensors: sensors, monitoring: message }); 
+    }
+  } catch (error) {
+    res.render('viewMonitoring');
+  }
+
 });
 
 app.listen(PORT, () => {

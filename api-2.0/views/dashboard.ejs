@@ -9,6 +9,7 @@
     <div id="buttonContainer">
         <button onclick="redirectToSensor()">Consulter les capteurs</button>
         <button onclick="redirectToMonitoring()">Consulter les données de monitoring</button>
+        <button onclick="redirectToLogin()">Retour</button>
     </div>
     <script>
         function redirectToSensor() {
@@ -16,6 +17,9 @@
         }
         function redirectToMonitoring() {
             window.location.href = "/viewMonitoring";
+        }
+        function redirectToLogin() {
+            window.location.href = "/";
         }
     </script>
 </body>

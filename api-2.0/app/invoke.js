@@ -49,26 +49,13 @@ const createSensor = async (args, username, org_name) => {
 
         const contract = network.getContract(chaincodeName);
 
-        let result = await contract.submitTransaction(fcn, args[0], args[1], args[2]);
-        let message = `Successfully added the car asset with key ${args[0]}`
+        await contract.submitTransaction(fcn, args[0], args[1], args[2]);
 
         await gateway.disconnect();
-
-        result = JSON.parse(result.toString());
-
-        let response = {
-            message: message,
-            result
-        }
-
-        return response;
-
+        return "success";
 
     } catch (error) {
-
-        console.log(`Getting error: ${error}`)
-        return error.message
-
+        return "failure";
     }
 }
 
