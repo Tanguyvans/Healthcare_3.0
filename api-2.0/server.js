@@ -176,10 +176,22 @@ app.get('/viewMonitoring', cookieJwtAuth, async function (req, res) {
     const sensorId = req.query.sensorId;
     const patient = req.query.patient;
 
+    console.log(sensorId, patient);
+
     if(typeof patient === 'undefined'){
-      var message = "undefined";
+      if(typeof sensorId === 'undefined'){
+        var message = "undefined";
+      } else {
+        var message = await query.queryCapsuleBySensorId(sensorId, username, orgName);
+      }
     }else {
-      var message = await query.queryCapsuleByPatient(patient, username, orgName);
+      if(typeof sensorId === 'undefined'){
+        var message = await query.queryCapsuleByPatient(patient, username, orgName);
+      } else if (sensorId === 'all'){
+        var message = await query.queryCapsuleByPatient(patient, username, orgName);
+      } else {
+        var message = await query.queryCapsuleBySensorIdAndPatient(sensorId, patient, username, orgName);
+      }
     }
 
     if(message === 'undefined'){

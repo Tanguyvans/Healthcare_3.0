@@ -423,7 +423,7 @@ chaincodeInvokeSensor() {
 }
 
 chaincodeInvokeCapsule() {
-    setGlobalsForPeer0Hospital
+    setGlobalsForPeer0Cardiology
     echo "chaincode invoke capsule"
 
     bin/peer chaincode invoke -o localhost:7050 \
@@ -479,4 +479,4 @@ queryCommittedCardiology
 queryCommittedGeneralServices
 sleep 5
 chaincodeInvokeSensor
-#chaincodeInvokeCapsule
+chaincodeInvokeCapsule

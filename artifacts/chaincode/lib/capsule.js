@@ -199,22 +199,22 @@ class Capsule extends Contract {
         const collectionName = 'collectionCapsulePrivateDetails';
 
         const asset = {
-            ID: id,
-            SensorID: sensorId,
+            Id: id,
+            SensorId: sensorId,
             DataType: "capsuleData",
             SensorType: sensorType,
-            TimeStamp: timestamp,
+            Timestamp: timestamp,
             Patient: patient,
-            valueA: ctx.stub.createCompositeKey('asset~valueA', [id]),
-            valueB: ctx.stub.createCompositeKey('asset~valueB', [id]),
+            ValueA: ctx.stub.createCompositeKey('asset~valueA', [id]),
+            ValueB: ctx.stub.createCompositeKey('asset~valueB', [id]),
         };
     
         // Save the public data to the ledger
         await ctx.stub.putState(id, Buffer.from(JSON.stringify(asset)));
     
         // Save the private data to the collection
-        await ctx.stub.putPrivateData(collectionName, asset.valueA, Buffer.from(valueA));
-        await ctx.stub.putPrivateData(collectionName, asset.valueB, Buffer.from(valueB));
+        await ctx.stub.putPrivateData(collectionName, asset.ValueA, Buffer.from(valueA));
+        await ctx.stub.putPrivateData(collectionName, asset.ValueB, Buffer.from(valueB));
     
         return JSON.stringify(asset);
     }
@@ -271,19 +271,17 @@ class Capsule extends Contract {
             const result = await iterator.next();
         
             if (result.value && result.value.value.toString()) {
-            const capsuleData = JSON.parse(result.value.value.toString());
-        
-            if (capsuleData.DataType === 'capsuleData' && capsuleData.Patient === patient) {
-                capsulesByPatient.push(capsuleData);
+                const capsuleData = JSON.parse(result.value.value.toString());
+            
+                if (capsuleData.DataType === 'capsuleData' && capsuleData.Patient === patient) {
+                    capsulesByPatient.push(capsuleData);
+                }
             }
-            }
-        
             if (result.done) {
-            await iterator.close();
-            break;
+                await iterator.close();
+                break;
             }
         }
-        
         return JSON.stringify(capsulesByPatient);
     }
 
@@ -302,16 +300,74 @@ class Capsule extends Contract {
                 const capsuleData = JSON.parse(result.value.value.toString());
         
                 if (capsuleData.DataType === 'capsuleData' && capsuleData.Patient === patient) {
-                const privateDataA = await ctx.stub.getPrivateData(collectionName, capsuleData.valueA);
-                const privateDataB = await ctx.stub.getPrivateData(collectionName, capsuleData.valueB);
+                    const privateDataA = await ctx.stub.getPrivateData(collectionName, capsuleData.valueA);
+                    const privateDataB = await ctx.stub.getPrivateData(collectionName, capsuleData.valueB);
+            
+                    const parsedCapsuleData = {
+                        ...capsuleData,
+                        privateValueA: privateDataA.toString('utf8'),
+                        privateValueB: privateDataB.toString('utf8')
+                    };
+                    capsulesByPatient.push(parsedCapsuleData);
+                }
+            }
+            if (result.done) {
+                await iterator.close();
+                break;
+            }
+        }
+        return JSON.stringify(capsulesByPatient);
+    }
+
+    async QueryCapsulesBySensorId(ctx, sensorId) {
+        const startKey = '';
+        const endKey = '';
+      
+        const iterator = await ctx.stub.getStateByRange(startKey, endKey);
+        const capsulesBySensorId = [];
+      
+        while (true) {
+            const result = await iterator.next();
+            if (result.value && result.value.value.toString()) {
+                const capsuleData = JSON.parse(result.value.value.toString());
+            
+                if (capsuleData.DataType === 'capsuleData' && capsuleData.SensorId === sensorId) {
+                    capsulesBySensorId.push(capsuleData);
+                }
+            }
+            if (result.done) {
+                await iterator.close();
+                break;
+            }
+        }
+        return JSON.stringify(capsulesBySensorId);
+    }
+      
+    async QueryPrivateCapsulesBySensorId(ctx, sensorId) {
+        const collectionName = 'collectionCapsulePrivateDetails';
+        const startKey = '';
+        const endKey = '';
+      
+        const iterator = await ctx.stub.getStateByRange(startKey, endKey);
+        const capsulesBySensorId = [];
+      
+        while (true) {
+            const result = await iterator.next();
         
-                const parsedCapsuleData = {
-                    ...capsuleData,
-                    privateValueA: privateDataA.toString('utf8'),
-                    privateValueB: privateDataB.toString('utf8')
-                };
+            if (result.value && result.value.value.toString()) {
+                const capsuleData = JSON.parse(result.value.value.toString());
         
-                capsulesByPatient.push(parsedCapsuleData);
+                if (capsuleData.DataType === 'capsuleData' && capsuleData.SensorId === sensorId) {
+                    const privateDataA = await ctx.stub.getPrivateData(collectionName, capsuleData.ValueA);
+                    const privateDataB = await ctx.stub.getPrivateData(collectionName, capsuleData.ValueB);
+            
+                    const parsedCapsuleData = {
+                        ...capsuleData,
+                        PrivateValueA: privateDataA.toString('utf8'),
+                        PrivateValueB: privateDataB.toString('utf8')
+                    };
+            
+                    capsulesBySensorId.push(parsedCapsuleData);
                 }
             }
         
@@ -320,11 +376,69 @@ class Capsule extends Contract {
                 break;
             }
         }
-        return JSON.stringify(capsulesByPatient);
+        return JSON.stringify(capsulesBySensorId);
+    }
+    
+    async QueryCapsulesBySensorIdAndPatient(ctx, sensorId, patient) {
+        const startKey = '';
+        const endKey = '';
+      
+        const iterator = await ctx.stub.getStateByRange(startKey, endKey);
+        const capsulesBySensorIdAndPatient = [];
+      
+        while (true) {
+            const result = await iterator.next();
+        
+            if (result.value && result.value.value.toString()) {
+                const capsuleData = JSON.parse(result.value.value.toString());
+            
+                if (capsuleData.DataType === 'capsuleData' && capsuleData.SensorId === sensorId && capsuleData.Patient === patient) {
+                    capsulesBySensorIdAndPatient.push(capsuleData);
+                }
+            }
+            if (result.done) {
+                await iterator.close();
+                break;
+            }
+        }
+        return JSON.stringify(capsulesBySensorIdAndPatient);
     }
       
+    async QueryPrivateCapsulesBySensorIdAndPatient(ctx, sensorId, patient) {
+        const collectionName = 'collectionCapsulePrivateDetails';
+        const startKey = '';
+        const endKey = '';
       
-    
+        const iterator = await ctx.stub.getStateByRange(startKey, endKey);
+        const capsulesBySensorIdAndPatient = [];
+      
+        while (true) {
+            const result = await iterator.next();
+        
+            if (result.value && result.value.value.toString()) {
+                const capsuleData = JSON.parse(result.value.value.toString());
+        
+                if (capsuleData.DataType === 'capsuleData' && capsuleData.SensorId === sensorId && capsuleData.Patient === patient) {
+                    const privateDataA = await ctx.stub.getPrivateData(collectionName, capsuleData.ValueA);
+                    const privateDataB = await ctx.stub.getPrivateData(collectionName, capsuleData.ValueB);
+            
+                    const parsedCapsuleData = {
+                        ...capsuleData,
+                        PrivateValueA: privateDataA.toString('utf8'),
+                        PrivateValueB: privateDataB.toString('utf8')
+                    };
+            
+                    capsulesBySensorIdAndPatient.push(parsedCapsuleData);
+                }
+            }
+        
+            if (result.done) {
+                await iterator.close();
+                break;
+            }
+        }
+        return JSON.stringify(capsulesBySensorIdAndPatient);
+    }
 }
 
 module.exports = Capsule;

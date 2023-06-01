@@ -352,7 +352,6 @@ const queryCapsuleByPatient = async (patient, username, org_name) => {
         const contract = network.getContract(chaincodeName);
         let result = await contract.evaluateTransaction("QueryCapsulesByPatient", patient);
             
-        console.log(result)
         console.log(`Transaction has been evaluated, result is: ${result.toString()}`);
 
         result = JSON.parse(result.toString());
@@ -409,6 +408,170 @@ const queryPrivateCapsuleByPatient = async (patient, username, org_name) => {
     }
 }
 
+const queryCapsuleBySensorId = async (sensorId, username, org_name) => {
+    var chaincodeName = "capsule";
+    var channelName = "mychannel";
+    try {
+        const ccp = await helper.getCCP(org_name) //JSON.parse(ccpJSON);
+        const walletPath = await helper.getWalletPath(org_name) //.join(process.cwd(), 'wallet');
+        const wallet = await Wallets.newFileSystemWallet(walletPath);
+        console.log(`Wallet path: ${walletPath}`);
+
+        // Check to see if we've already enrolled the user.
+        let identity = await wallet.get(username);
+        if (!identity) {
+            console.log(`An identity for the user ${username} does not exist in the wallet, so registering user`);
+            await helper.getRegisteredUser(username, org_name, true)
+            identity = await wallet.get(username);
+            console.log('Run the registerUser.js application before retrying');
+            return;
+        }
+
+        // Create a new gateway for connecting to our peer node.
+        const gateway = new Gateway();
+        await gateway.connect(ccp, {
+            wallet, identity: username, discovery: { enabled: true, asLocalhost: true }
+        });
+
+        // Get the network (channel) our contract is deployed to.
+        const network = await gateway.getNetwork(channelName);
+
+        // Get the contract from the network.
+        const contract = network.getContract(chaincodeName);
+        let result = await contract.evaluateTransaction("QueryCapsulesBySensorId", sensorId);
+            
+        console.log(`Transaction has been evaluated, result is: ${result.toString()}`);
+
+        return JSON.parse(result.toString());
+    } catch (error) {
+        console.error(`Failed to evaluate transaction: ${error}`);
+        return error.message
+    }
+}
+
+const queryPrivateCapsuleBySensorId = async (sensorId, username, org_name) => {
+    var chaincodeName = "capsule";
+    var channelName = "mychannel";
+    try {
+        const ccp = await helper.getCCP(org_name) //JSON.parse(ccpJSON);
+        const walletPath = await helper.getWalletPath(org_name) //.join(process.cwd(), 'wallet');
+        const wallet = await Wallets.newFileSystemWallet(walletPath);
+        console.log(`Wallet path: ${walletPath}`);
+
+        // Check to see if we've already enrolled the user.
+        let identity = await wallet.get(username);
+        if (!identity) {
+            console.log(`An identity for the user ${username} does not exist in the wallet, so registering user`);
+            await helper.getRegisteredUser(username, org_name, true)
+            identity = await wallet.get(username);
+            console.log('Run the registerUser.js application before retrying');
+            return;
+        }
+
+        // Create a new gateway for connecting to our peer node.
+        const gateway = new Gateway();
+        await gateway.connect(ccp, {
+            wallet, identity: username, discovery: { enabled: true, asLocalhost: true }
+        });
+
+        // Get the network (channel) our contract is deployed to.
+        const network = await gateway.getNetwork(channelName);
+
+        // Get the contract from the network.
+        const contract = network.getContract(chaincodeName);
+        let result = await contract.evaluateTransaction("QueryPrivateCapsulesBySensorId", sensorId);
+            
+        console.log(`Transaction has been evaluated, result is: ${result.toString()}`);
+
+        return JSON.parse(result.toString());
+    } catch (error) {
+        console.error(`Failed to evaluate transaction: ${error}`);
+        return error.message
+    }
+}
+
+const queryCapsuleBySensorIdAndPatient = async (sensorId, patient, username, org_name) => {
+    var chaincodeName = "capsule";
+    var channelName = "mychannel";
+    try {
+        const ccp = await helper.getCCP(org_name) //JSON.parse(ccpJSON);
+        const walletPath = await helper.getWalletPath(org_name) //.join(process.cwd(), 'wallet');
+        const wallet = await Wallets.newFileSystemWallet(walletPath);
+        console.log(`Wallet path: ${walletPath}`);
+
+        // Check to see if we've already enrolled the user.
+        let identity = await wallet.get(username);
+        if (!identity) {
+            console.log(`An identity for the user ${username} does not exist in the wallet, so registering user`);
+            await helper.getRegisteredUser(username, org_name, true)
+            identity = await wallet.get(username);
+            console.log('Run the registerUser.js application before retrying');
+            return;
+        }
+
+        // Create a new gateway for connecting to our peer node.
+        const gateway = new Gateway();
+        await gateway.connect(ccp, {
+            wallet, identity: username, discovery: { enabled: true, asLocalhost: true }
+        });
+
+        // Get the network (channel) our contract is deployed to.
+        const network = await gateway.getNetwork(channelName);
+
+        // Get the contract from the network.
+        const contract = network.getContract(chaincodeName);
+        let result = await contract.evaluateTransaction("QueryCapsulesBySensorIdAndPatient", sensorId, patient);
+            
+        console.log(`Transaction has been evaluated, result is: ${result.toString()}`);
+
+        return JSON.parse(result.toString());
+    } catch (error) {
+        console.error(`Failed to evaluate transaction: ${error}`);
+        return error.message
+    }
+}
+
+const QueryPrivateCapsulesBySensorIdAndPatient = async (sensorId, patient, username, org_name) => {
+    var chaincodeName = "capsule";
+    var channelName = "mychannel";
+    try {
+        const ccp = await helper.getCCP(org_name) //JSON.parse(ccpJSON);
+        const walletPath = await helper.getWalletPath(org_name) //.join(process.cwd(), 'wallet');
+        const wallet = await Wallets.newFileSystemWallet(walletPath);
+        console.log(`Wallet path: ${walletPath}`);
+
+        // Check to see if we've already enrolled the user.
+        let identity = await wallet.get(username);
+        if (!identity) {
+            console.log(`An identity for the user ${username} does not exist in the wallet, so registering user`);
+            await helper.getRegisteredUser(username, org_name, true)
+            identity = await wallet.get(username);
+            console.log('Run the registerUser.js application before retrying');
+            return;
+        }
+
+        // Create a new gateway for connecting to our peer node.
+        const gateway = new Gateway();
+        await gateway.connect(ccp, {
+            wallet, identity: username, discovery: { enabled: true, asLocalhost: true }
+        });
+
+        // Get the network (channel) our contract is deployed to.
+        const network = await gateway.getNetwork(channelName);
+
+        // Get the contract from the network.
+        const contract = network.getContract(chaincodeName);
+        let result = await contract.evaluateTransaction("QueryPrivateCapsulesBySensorIdAndPatient", sensorId, patient);
+            
+        console.log(`Transaction has been evaluated, result is: ${result.toString()}`);
+
+        return JSON.parse(result.toString());
+    } catch (error) {
+        console.error(`Failed to evaluate transaction: ${error}`);
+        return error.message
+    }
+}
+
 exports.querySensorId = querySensorId
 exports.querySensorsType = querySensorsType
 exports.querySensorsTypeAvailable = querySensorsTypeAvailable
@@ -419,3 +582,7 @@ exports.queryCapsuleId = queryCapsuleId
 exports.queryCapsulePrivateDataId = queryCapsulePrivateDataId
 exports.queryCapsuleByPatient = queryCapsuleByPatient
 exports.queryPrivateCapsuleByPatient = queryPrivateCapsuleByPatient
+exports.queryCapsuleBySensorId = queryCapsuleBySensorId
+exports.queryPrivateCapsuleBySensorId = queryPrivateCapsuleBySensorId
+exports.queryCapsuleBySensorIdAndPatient = queryCapsuleBySensorIdAndPatient
+exports.QueryPrivateCapsulesBySensorIdAndPatient = QueryPrivateCapsulesBySensorIdAndPatient
