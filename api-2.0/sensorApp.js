@@ -40,7 +40,7 @@ app.post('/sensorCreateCapsule', async function (req, res) {
         var sensorData = req.body;
 
         var id = Date.now().toString();
-        var sensorId = "s1";
+        var sensorId = sensorData.sensorId;
         var valueA = sensorData.valueA;
         var valueB = sensorData.valueB;
 

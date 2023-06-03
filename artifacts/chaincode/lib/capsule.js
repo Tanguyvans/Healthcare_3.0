@@ -26,13 +26,13 @@ class Capsule extends Contract {
                 SensorId: "s1",
                 DataType: "sensorData",
                 SensorType: 'Heart',
-                Patient: 'Said',
+                Patient: 'none',
             },
             {
                 SensorId: "s2",
                 DataType: "sensorData",
                 SensorType: 'Lungs',
-                Patient: 'Mathis',
+                Patient: 'none',
             }
         ];
 
@@ -300,17 +300,19 @@ class Capsule extends Contract {
                 const capsuleData = JSON.parse(result.value.value.toString());
         
                 if (capsuleData.DataType === 'capsuleData' && capsuleData.Patient === patient) {
-                    const privateDataA = await ctx.stub.getPrivateData(collectionName, capsuleData.valueA);
-                    const privateDataB = await ctx.stub.getPrivateData(collectionName, capsuleData.valueB);
+                    const privateDataA = await ctx.stub.getPrivateData(collectionName, capsuleData.ValueA);
+                    const privateDataB = await ctx.stub.getPrivateData(collectionName, capsuleData.ValueB);
             
                     const parsedCapsuleData = {
                         ...capsuleData,
-                        privateValueA: privateDataA.toString('utf8'),
-                        privateValueB: privateDataB.toString('utf8')
+                        PrivateValueA: privateDataA.toString('utf8'),
+                        PrivateValueB: privateDataB.toString('utf8')
                     };
+            
                     capsulesByPatient.push(parsedCapsuleData);
                 }
             }
+        
             if (result.done) {
                 await iterator.close();
                 break;

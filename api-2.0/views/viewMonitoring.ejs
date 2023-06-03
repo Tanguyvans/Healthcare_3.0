@@ -63,11 +63,43 @@
                     </table>
                 </div>
             </div>
+        <% } else if (typeof privateMonitoring !== 'undefined') { %>
+            <div id="monitoringBackground">
+                <div id="monitoring">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>sensorId</th>
+                                <th>sensorType</th>
+                                <th>patient</th>
+                                <th>timestamp</th>
+                                <th>valueA</th>
+                                <th>valueB</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% privateMonitoring.forEach(function(capsule) { %>
+                                <tr>
+                                    <td><%= capsule.Id %></td>
+                                    <td><%= capsule.SensorId %></td>
+                                    <td><%= capsule.SensorType %></td>
+                                    <td><%= capsule.Patient %></td>
+                                    <td><%= capsule.Timestamp %></td>
+                                    <td><%= capsule.PrivateValueA %></td>
+                                    <td><%= capsule.PrivateValueB %></td>
+                                </tr>
+                            <% }); %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         <% } else { %>
             <div id="monitoring">
                 Aucun capteur disponible.
             </div>
         <% } %>
-    </div>  
+    </div>
+      
 </body>
 </html>

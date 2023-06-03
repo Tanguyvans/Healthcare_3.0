@@ -367,7 +367,6 @@ const queryPrivateCapsuleByPatient = async (patient, username, org_name) => {
     var chaincodeName = "capsule";
     var channelName = "mychannel";
     try {
-        console.log(patient);
         const ccp = await helper.getCCP(org_name) //JSON.parse(ccpJSON);
         const walletPath = await helper.getWalletPath(org_name) //.join(process.cwd(), 'wallet');
         const wallet = await Wallets.newFileSystemWallet(walletPath);
@@ -396,15 +395,12 @@ const queryPrivateCapsuleByPatient = async (patient, username, org_name) => {
         const contract = network.getContract(chaincodeName);
         let result = await contract.evaluateTransaction("QueryPrivateCapsulesByPatient", patient);
             
-        console.log(result)
         console.log(`Transaction has been evaluated, result is: ${result.toString()}`);
 
-        result = JSON.parse(result.toString());
-        return result
+        return JSON.parse(result.toString());
     } catch (error) {
         console.error(`Failed to evaluate transaction: ${error}`);
         return error.message
-
     }
 }
 
@@ -531,7 +527,7 @@ const queryCapsuleBySensorIdAndPatient = async (sensorId, patient, username, org
     }
 }
 
-const QueryPrivateCapsulesBySensorIdAndPatient = async (sensorId, patient, username, org_name) => {
+const queryPrivateCapsulesBySensorIdAndPatient = async (sensorId, patient, username, org_name) => {
     var chaincodeName = "capsule";
     var channelName = "mychannel";
     try {
@@ -585,4 +581,4 @@ exports.queryPrivateCapsuleByPatient = queryPrivateCapsuleByPatient
 exports.queryCapsuleBySensorId = queryCapsuleBySensorId
 exports.queryPrivateCapsuleBySensorId = queryPrivateCapsuleBySensorId
 exports.queryCapsuleBySensorIdAndPatient = queryCapsuleBySensorIdAndPatient
-exports.QueryPrivateCapsulesBySensorIdAndPatient = QueryPrivateCapsulesBySensorIdAndPatient
+exports.queryPrivateCapsulesBySensorIdAndPatient = queryPrivateCapsulesBySensorIdAndPatient

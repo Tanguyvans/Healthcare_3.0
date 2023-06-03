@@ -23,6 +23,8 @@ app.set('views', path.join(__dirname, 'views'));
 
 logger.level = 'debug';
 
+const authorizedOrganizations = ['Hospital', 'Cardiology'];
+
 function getUserInfo(req) {
   const token = req.cookies.token; // Récupérer le jeton JWT à partir du cookie
 
@@ -176,28 +178,61 @@ app.get('/viewMonitoring', cookieJwtAuth, async function (req, res) {
     const sensorId = req.query.sensorId;
     const patient = req.query.patient;
 
-    console.log(sensorId, patient);
-
-    if(typeof patient === 'undefined'){
-      if(typeof sensorId === 'undefined'){
-        var message = "undefined";
-      } else {
-        var message = await query.queryCapsuleBySensorId(sensorId, username, orgName);
+    if (authorizedOrganizations.includes(orgName)) {
+      var message = 'undefined';
+      if(typeof patient === 'undefined'){
+        if(typeof sensorId === 'undefined'){
+          var privateMessage = "undefined";
+        } else {
+          var privateMessage = await query.queryPrivateCapsuleBySensorId(sensorId, username, orgName);
+        }
+      }else if(patient === ''){
+        if(typeof sensorId === 'undefined'){
+          var privateMessage = "undefined";
+        } else {
+          var privateMessage = await query.queryPrivateCapsuleBySensorId(sensorId, username, orgName);
+        }
+      }else {
+        if(typeof sensorId === 'undefined'){
+          var privateMessage = await query.queryPrivateCapsuleByPatient(patient, username, orgName);
+        } else if (sensorId === 'all'){
+          var privateMessage = await query.queryPrivateCapsuleByPatient(patient, username, orgName);
+        } else {
+          var privateMessage = await query.queryPrivateCapsulesBySensorIdAndPatient(sensorId, patient, username, orgName);
+        }
       }
-    }else {
-      if(typeof sensorId === 'undefined'){
-        var message = await query.queryCapsuleByPatient(patient, username, orgName);
-      } else if (sensorId === 'all'){
-        var message = await query.queryCapsuleByPatient(patient, username, orgName);
-      } else {
-        var message = await query.queryCapsuleBySensorIdAndPatient(sensorId, patient, username, orgName);
+
+    } else {
+      var privateMessage = 'undefined';
+      if(typeof patient === 'undefined'){
+        if(typeof sensorId === 'undefined'){
+          var message = "undefined";
+        } else {
+          var message = await query.queryCapsuleBySensorId(sensorId, username, orgName);
+        }
+      }else if(patient === ''){
+        if(typeof sensorId === 'undefined'){
+          var message = "undefined";
+        } else {
+          var message = await query.queryCapsuleBySensorId(sensorId, username, orgName);
+        }
+      }else {
+        if(typeof sensorId === 'undefined'){
+          var message = await query.queryCapsuleByPatient(patient, username, orgName);
+        } else if (sensorId === 'all'){
+          var message = await query.queryCapsuleByPatient(patient, username, orgName);
+        } else {
+          var message = await query.queryCapsuleBySensorIdAndPatient(sensorId, patient, username, orgName);
+        }
       }
     }
 
-    if(message === 'undefined'){
+    if(message === 'undefined' && privateMessage === 'undefined'){
       res.render('viewMonitoring', {sensors: sensors });
-    }else {
+    }else if(privateMessage === 'undefined'){
       res.render('viewMonitoring', {sensors: sensors, monitoring: message }); 
+    }else {
+      res.render('viewMonitoring', {sensors: sensors, privateMonitoring: privateMessage }); 
     }
   } catch (error) {
     res.render('viewMonitoring');
