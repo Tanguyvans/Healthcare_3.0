@@ -10,9 +10,7 @@ const PORT =5000;
 const constants = require('./config/constants.json')
 const { cookieJwtAuth } = require("./src/middleware/cookieJwtAuth");
 
-const helper = require('./app/helper')
 const invoke = require('./app/invoke')
-const qscc = require('./app/qscc')
 const query = require('./app/query')
 const del = require('./app/delete')
 const update = require('./app/update')
