@@ -194,6 +194,7 @@ app.get('/viewMonitoring', cookieJwtAuth, async function (req, res) {
         if(typeof sensorId === 'undefined'){
           var privateMessage = await query.queryPrivateCapsuleByPatient(patient, username, orgName);
         } else if (sensorId === 'all'){
+          console.log('in');
           var privateMessage = await query.queryPrivateCapsuleByPatient(patient, username, orgName);
         } else {
           var privateMessage = await query.queryPrivateCapsulesBySensorIdAndPatient(sensorId, patient, username, orgName);

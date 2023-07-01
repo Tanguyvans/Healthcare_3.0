@@ -386,40 +386,87 @@ chaincodeInvokeSensor() {
         --peerAddresses localhost:7051 --tlsRootCertFiles $PEER0_HOSPITAL_CA \
         --peerAddresses localhost:9051 --tlsRootCertFiles $PEER0_CARDIOLOGY_CA\
         --peerAddresses localhost:11051 --tlsRootCertFiles $PEER0_GENERALSERVICES_CA \
-        -c '{"function": "CreateSensor","Args":["sensor2", "cardiac", "Tanguy"]}'
+        -c '{"function": "CreateSensor","Args":["s1", "Heart", "Tanguy"]}'
 
-    # bin/peer chaincode invoke -o localhost:7050 \
-    #     --ordererTLSHostnameOverride orderer.network.com \
-    #     --tls $CORE_PEER_TLS_ENABLED \
-    #     --cafile $ORDERER_CA \
-    #     -C $CHANNEL_NAME -n ${CC_NAME} \
-    #     --peerAddresses localhost:7051 --tlsRootCertFiles $PEER0_HOSPITAL_CA \
-    #     --peerAddresses localhost:9051 --tlsRootCertFiles $PEER0_CARDIOLOGY_CA\
-    #     --peerAddresses localhost:11051 --tlsRootCertFiles $PEER0_GENERALSERVICES_CA \
-    #     -c '{"function": "UpdateSensorPatientName","Args":["sensor1", "Tonny"]}'
-
-    # bin/peer chaincode invoke -o localhost:7050 \
-    #     --ordererTLSHostnameOverride orderer.network.com \
-    #     --tls $CORE_PEER_TLS_ENABLED \
-    #     --cafile $ORDERER_CA \
-    #     -C $CHANNEL_NAME -n ${CC_NAME} \
-    #     --peerAddresses localhost:7051 --tlsRootCertFiles $PEER0_HOSPITAL_CA \
-    #     --peerAddresses localhost:9051 --tlsRootCertFiles $PEER0_CARDIOLOGY_CA\
-    #     --peerAddresses localhost:11051 --tlsRootCertFiles $PEER0_GENERALSERVICES_CA \
-    #     -c '{"function": "QuerySensorById","Args":["sensor1"]}'
-
-    result=$(bin/peer chaincode invoke -o localhost:7050 \
+    bin/peer chaincode invoke -o localhost:7050 \
         --ordererTLSHostnameOverride orderer.network.com \
         --tls $CORE_PEER_TLS_ENABLED \
         --cafile $ORDERER_CA \
         -C $CHANNEL_NAME -n ${CC_NAME} \
         --peerAddresses localhost:7051 --tlsRootCertFiles $PEER0_HOSPITAL_CA \
-        --peerAddresses localhost:9051 --tlsRootCertFiles $PEER0_CARDIOLOGY_CA \
+        --peerAddresses localhost:9051 --tlsRootCertFiles $PEER0_CARDIOLOGY_CA\
         --peerAddresses localhost:11051 --tlsRootCertFiles $PEER0_GENERALSERVICES_CA \
-        -c '{"function": "QuerySensorsByType","Args":["heart"]}' | jq -r '.payload.data')
+        -c '{"function": "CreateSensor","Args":["s2", "Heart", "Loic"]}'
 
-    echo $result
+    bin/peer chaincode invoke -o localhost:7050 \
+        --ordererTLSHostnameOverride orderer.network.com \
+        --tls $CORE_PEER_TLS_ENABLED \
+        --cafile $ORDERER_CA \
+        -C $CHANNEL_NAME -n ${CC_NAME} \
+        --peerAddresses localhost:7051 --tlsRootCertFiles $PEER0_HOSPITAL_CA \
+        --peerAddresses localhost:9051 --tlsRootCertFiles $PEER0_CARDIOLOGY_CA\
+        --peerAddresses localhost:11051 --tlsRootCertFiles $PEER0_GENERALSERVICES_CA \
+        -c '{"function": "CreateSensor","Args":["s3", "Heart", "Pierre"]}'
 
+    bin/peer chaincode invoke -o localhost:7050 \
+        --ordererTLSHostnameOverride orderer.network.com \
+        --tls $CORE_PEER_TLS_ENABLED \
+        --cafile $ORDERER_CA \
+        -C $CHANNEL_NAME -n ${CC_NAME} \
+        --peerAddresses localhost:7051 --tlsRootCertFiles $PEER0_HOSPITAL_CA \
+        --peerAddresses localhost:9051 --tlsRootCertFiles $PEER0_CARDIOLOGY_CA\
+        --peerAddresses localhost:11051 --tlsRootCertFiles $PEER0_GENERALSERVICES_CA \
+        -c '{"function": "CreateSensor","Args":["s4", "Heart", "John"]}'
+
+    bin/peer chaincode invoke -o localhost:7050 \
+        --ordererTLSHostnameOverride orderer.network.com \
+        --tls $CORE_PEER_TLS_ENABLED \
+        --cafile $ORDERER_CA \
+        -C $CHANNEL_NAME -n ${CC_NAME} \
+        --peerAddresses localhost:7051 --tlsRootCertFiles $PEER0_HOSPITAL_CA \
+        --peerAddresses localhost:9051 --tlsRootCertFiles $PEER0_CARDIOLOGY_CA\
+        --peerAddresses localhost:11051 --tlsRootCertFiles $PEER0_GENERALSERVICES_CA \
+        -c '{"function": "CreateSensor","Args":["s5", "Heart", "Liam"]}'
+
+    bin/peer chaincode invoke -o localhost:7050 \
+        --ordererTLSHostnameOverride orderer.network.com \
+        --tls $CORE_PEER_TLS_ENABLED \
+        --cafile $ORDERER_CA \
+        -C $CHANNEL_NAME -n ${CC_NAME} \
+        --peerAddresses localhost:7051 --tlsRootCertFiles $PEER0_HOSPITAL_CA \
+        --peerAddresses localhost:9051 --tlsRootCertFiles $PEER0_CARDIOLOGY_CA\
+        --peerAddresses localhost:11051 --tlsRootCertFiles $PEER0_GENERALSERVICES_CA \
+        -c '{"function": "CreateSensor","Args":["s6", "Heart", "Peter"]}'
+
+    bin/peer chaincode invoke -o localhost:7050 \
+        --ordererTLSHostnameOverride orderer.network.com \
+        --tls $CORE_PEER_TLS_ENABLED \
+        --cafile $ORDERER_CA \
+        -C $CHANNEL_NAME -n ${CC_NAME} \
+        --peerAddresses localhost:7051 --tlsRootCertFiles $PEER0_HOSPITAL_CA \
+        --peerAddresses localhost:9051 --tlsRootCertFiles $PEER0_CARDIOLOGY_CA\
+        --peerAddresses localhost:11051 --tlsRootCertFiles $PEER0_GENERALSERVICES_CA \
+        -c '{"function": "CreateSensor","Args":["s7", "Heart", "Bruce"]}'
+
+    bin/peer chaincode invoke -o localhost:7050 \
+        --ordererTLSHostnameOverride orderer.network.com \
+        --tls $CORE_PEER_TLS_ENABLED \
+        --cafile $ORDERER_CA \
+        -C $CHANNEL_NAME -n ${CC_NAME} \
+        --peerAddresses localhost:7051 --tlsRootCertFiles $PEER0_HOSPITAL_CA \
+        --peerAddresses localhost:9051 --tlsRootCertFiles $PEER0_CARDIOLOGY_CA\
+        --peerAddresses localhost:11051 --tlsRootCertFiles $PEER0_GENERALSERVICES_CA \
+        -c '{"function": "CreateSensor","Args":["s8", "Heart", "Barry"]}'
+
+    bin/peer chaincode invoke -o localhost:7050 \
+        --ordererTLSHostnameOverride orderer.network.com \
+        --tls $CORE_PEER_TLS_ENABLED \
+        --cafile $ORDERER_CA \
+        -C $CHANNEL_NAME -n ${CC_NAME} \
+        --peerAddresses localhost:7051 --tlsRootCertFiles $PEER0_HOSPITAL_CA \
+        --peerAddresses localhost:9051 --tlsRootCertFiles $PEER0_CARDIOLOGY_CA\
+        --peerAddresses localhost:11051 --tlsRootCertFiles $PEER0_GENERALSERVICES_CA \
+        -c '{"function": "CreateSensor","Args":["s9", "Heart", "Rocket"]}'
 }
 
 chaincodeInvokeCapsule() {
@@ -478,5 +525,5 @@ queryCommittedHospital
 queryCommittedCardiology
 queryCommittedGeneralServices
 sleep 5
-# chaincodeInvokeSensor
+chaincodeInvokeSensor
 # chaincodeInvokeCapsule
